@@ -16,10 +16,11 @@ const Header = () => {
     <header className="flex items-center ps-2 pe-4 py-2 border-b sticky top-0 bg-background z-50">
       <SidebarTrigger />
       <Separator orientation="vertical" className="mx-2 !h-8" />
-      <Link href="/products">
+      <ThemeChanger />
+      <Link href="/products" className="mx-auto">
         <H5>REEN</H5>
       </Link>
-      <div className="ms-auto flex items-center">
+      <div className="flex items-center">
         <UserButton
           appearance={{
             elements: {
@@ -32,8 +33,6 @@ const Header = () => {
           }}
           showName
         />
-        <Separator orientation="vertical" className="mx-2 !h-8" />
-        <ThemeChanger />
         <Separator orientation="vertical" className="mx-2 !h-8" />
         <Button variant="outline" size="icon" className="w-8 h-8 rounded-full">
           <ShoppingCart />
