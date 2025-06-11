@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
+import { ThemeProvider } from "next-themes";
 
 import "./globals.css";
 
@@ -29,14 +30,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClerkProvider>
-          <SignedIn>{children}</SignedIn>
-          <SignedOut>
-            <div className="h-screen flex items-center justify-center">
-              <SignIn />
-            </div>
-          </SignedOut>
-        </ClerkProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkProvider>
+            <SignedIn>{children}</SignedIn>
+            <SignedOut>
+              <div className="h-screen flex items-center justify-center">
+                <SignIn />
+              </div>
+            </SignedOut>
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
