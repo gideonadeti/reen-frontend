@@ -15,7 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "REEN",
+  title: {
+    default: "REEN",
+    template: "%s | REEN",
+  },
   description:
     "Frontend of a scalable e-commerce platform built using microservices architecture",
 };
