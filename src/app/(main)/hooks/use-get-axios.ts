@@ -10,9 +10,10 @@ const useGetAxios = () => {
       const token = await getToken();
 
       return axios.create({
-        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+        baseURL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
         headers: {
           Authorization: `Bearer ${token}`,
+          "ngrok-skip-browser-warning": true,
         },
       });
     };
