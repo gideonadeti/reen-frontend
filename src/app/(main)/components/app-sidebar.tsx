@@ -39,6 +39,7 @@ const AppSidebar = () => {
   const user = userQuery.data;
   const [openUpdateUserRoleDialog, setOpenUpdateUserRoleDialog] =
     useState(false);
+  const isNadmin = user?.role === "NADMIN";
 
   return (
     <Sidebar>
@@ -62,6 +63,13 @@ const AppSidebar = () => {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          {!isNadmin && (
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Button variant="outline">Create a product</Button>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Button
