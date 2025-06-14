@@ -6,6 +6,7 @@ import { ShoppingBag } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
+import CreateProductDialog from "./create-product-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -39,6 +40,7 @@ const AppSidebar = () => {
   const user = userQuery.data;
   const [openUpdateUserRoleDialog, setOpenUpdateUserRoleDialog] =
     useState(false);
+  const [openCreateProductDialog, setOpenCreateProductDialog] = useState(false);
   const isNadmin = user?.role === "NADMIN";
 
   return (
@@ -66,7 +68,12 @@ const AppSidebar = () => {
           {!isNadmin && (
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
-                <Button variant="outline">Create a product</Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setOpenCreateProductDialog(true)}
+                >
+                  Create a product
+                </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
           )}
@@ -85,6 +92,10 @@ const AppSidebar = () => {
       <UpdateUserRoleDialog
         open={openUpdateUserRoleDialog}
         onOpenChange={setOpenUpdateUserRoleDialog}
+      />
+      <CreateProductDialog
+        open={openCreateProductDialog}
+        onOpenChange={setOpenCreateProductDialog}
       />
     </Sidebar>
   );
