@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
-import { Eye, X } from "lucide-react";
+import { Eye, Loader, X } from "lucide-react";
 import {
   Dispatch,
   SetStateAction,
@@ -15,6 +15,7 @@ import {
   useState,
 } from "react";
 
+import useProducts from "../products/hooks/use-products";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   price: z.coerce
@@ -72,6 +73,7 @@ const CreateProductDialog = ({
   const [generateCount, setGenerateCount] = useState(1);
   const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
   const [hasGeneratedImages, setHasGeneratedImages] = useState(false);
+  const { createProductMutation } = useProducts();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,10 +85,6 @@ const CreateProductDialog = ({
       imageUrls: [],
     },
   });
-
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-  };
 
   const generateImageUrls = useCallback((count: number) => {
     const newImageUrls = Array.from(
@@ -115,6 +113,13 @@ const CreateProductDialog = ({
       form.trigger("imageUrls");
     }
   }, [generatedImageUrls, hasGeneratedImages, form]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    createProductMutation.mutate({
+      formValues: values,
+      closeCreateProductDialog,
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -283,7 +288,14 @@ const CreateProductDialog = ({
             onClick={() => submitButtonRef.current?.click()}
             disabled={!form.formState.isValid}
           >
-            Submit
+            {createProductMutation.isPending ? (
+              <span className="flex items-center">
+                <Loader className="animate-spin" />
+                <span>Submitting...</span>
+              </span>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
