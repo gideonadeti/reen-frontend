@@ -281,6 +281,7 @@ const CreateProductDialog = ({
             type="button"
             variant="secondary"
             onClick={closeCreateProductDialog}
+            disabled={createProductMutation.isPending}
           >
             Cancel
           </Button>

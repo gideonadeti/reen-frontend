@@ -88,7 +88,11 @@ const UpdateUserRoleDialog = ({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="secondary">
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={updateUserRoleMutation.isPending}
+            >
               Cancel
             </Button>
           </DialogClose>
