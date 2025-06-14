@@ -9,3 +9,13 @@ export const fetchCartItems = async (axios: AxiosInstance) => {
     console.error("Error from `fetchCartItems`:", error);
   }
 };
+
+export const fetchUser = async (axios: AxiosInstance, clerkId: string) => {
+  try {
+    const response = await axios.get(`auth/users/${clerkId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `fetchUser`:", error);
+  }
+};

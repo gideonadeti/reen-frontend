@@ -4,9 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ShoppingBag } from "lucide-react";
 
+import useUser from "../hooks/use-user";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
@@ -30,6 +33,8 @@ const menuItems: MenuItem[] = [
 
 const AppSidebar = () => {
   const pathname = usePathname();
+  const { userQuery } = useUser();
+  const user = userQuery.data;
 
   return (
     <Sidebar>
@@ -51,6 +56,17 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Button variant="outline">
+                Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
+              </Button>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };
