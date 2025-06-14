@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface MenuItem {
   href: string;
@@ -69,28 +70,42 @@ const AppSidebar = () => {
         </SidebarContent>
         <SidebarFooter>
           <SidebarMenu>
-            {!isNadmin && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Button
-                    variant="outline"
-                    onClick={() => setOpenCreateProductDialog(true)}
-                  >
-                    Create a product
-                  </Button>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+            {userQuery.isPending ? (
+              <>
+                {Array.from({ length: 2 }).map((_, index) => (
+                  <SidebarMenuItem key={index}>
+                    <SidebarMenuButton asChild>
+                      <Skeleton />
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </>
+            ) : (
+              <>
+                {!isNadmin && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <Button
+                        variant="outline"
+                        onClick={() => setOpenCreateProductDialog(true)}
+                      >
+                        Create a product
+                      </Button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Button
+                      variant="outline"
+                      onClick={() => setOpenUpdateUserRoleDialog(true)}
+                    >
+                      Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
+                    </Button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </>
             )}
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Button
-                  variant="outline"
-                  onClick={() => setOpenUpdateUserRoleDialog(true)}
-                >
-                  Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
-                </Button>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
