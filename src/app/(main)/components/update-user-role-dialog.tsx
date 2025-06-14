@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Loader } from "lucide-react";
 
 interface UpdateUserRoleDialogProps {
   open: boolean;
@@ -25,20 +26,18 @@ const UpdateUserRoleDialog = ({
   open,
   onOpenChange,
 }: UpdateUserRoleDialogProps) => {
-  const { userQuery } = useUser();
+  const { userQuery, updateUserRoleMutation } = useUser();
   const user = userQuery.data;
   const [confirmationText, setConfirmationText] = useState("");
   const isNadmin = user?.role === "NADMIN";
   const isConfirmed = confirmationText.trim() === REQUIRED_PHRASE;
 
   const handleSubmit = () => {
-    if (isNadmin && !isConfirmed) return;
-
-    // TODO: Replace this with actual role update logic (API call or mutation)
-    console.log(`User requested to become ${isNadmin ? "ADMIN" : "NADMIN"}`);
-
-    onOpenChange(false);
-    setConfirmationText("");
+    updateUserRoleMutation.mutate({
+      role: isNadmin ? "ADMIN" : "NADMIN",
+      setConfirmationText,
+      onOpenChange,
+    });
   };
 
   return (
@@ -81,7 +80,7 @@ const UpdateUserRoleDialog = ({
             </>
           ) : (
             <p className="text-sm text-muted-foreground">
-              You’re about to step down from ADMIN privileges and return to
+              You are about to step down from ADMIN privileges and return to
               NADMIN status.
             </p>
           )}
@@ -93,8 +92,20 @@ const UpdateUserRoleDialog = ({
               Cancel
             </Button>
           </DialogClose>
-          <Button disabled={isNadmin && !isConfirmed} onClick={handleSubmit}>
-            Submit
+          <Button
+            disabled={
+              (isNadmin && !isConfirmed) || updateUserRoleMutation.isPending
+            }
+            onClick={handleSubmit}
+          >
+            {updateUserRoleMutation.isPending ? (
+              <span className="flex items-center">
+                <Loader className="animate-spin" />
+                <span>Submitting...</span>
+              </span>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

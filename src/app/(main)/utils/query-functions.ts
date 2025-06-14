@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { UserRole } from "../types/user";
 
 export const fetchCartItems = async (axios: AxiosInstance) => {
   try {
@@ -17,5 +18,15 @@ export const fetchUser = async (axios: AxiosInstance, clerkId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error from `fetchUser`:", error);
+  }
+};
+
+export const updateUserRole = async (axios: AxiosInstance, role: UserRole) => {
+  try {
+    const response = await axios.post("auth/update-user-role", { role });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `updateUserRole`:", error);
   }
 };
