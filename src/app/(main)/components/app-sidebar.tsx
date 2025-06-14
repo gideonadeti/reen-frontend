@@ -44,51 +44,56 @@ const AppSidebar = () => {
   const isNadmin = user?.role === "NADMIN";
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton asChild isActive={pathname === item.href}>
-                    <Link href={item.href}>
-                      {item.icon}
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          {!isNadmin && (
+    <>
+      <Sidebar>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {menuItems.map((item) => (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.href}
+                    >
+                      <Link href={item.href}>
+                        {item.icon}
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            {!isNadmin && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenCreateProductDialog(true)}
+                  >
+                    Create a product
+                  </Button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
                 <Button
                   variant="outline"
-                  onClick={() => setOpenCreateProductDialog(true)}
+                  onClick={() => setOpenUpdateUserRoleDialog(true)}
                 >
-                  Create a product
+                  Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
                 </Button>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          )}
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Button
-                variant="outline"
-                onClick={() => setOpenUpdateUserRoleDialog(true)}
-              >
-                Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
-              </Button>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
       <UpdateUserRoleDialog
         open={openUpdateUserRoleDialog}
         onOpenChange={setOpenUpdateUserRoleDialog}
@@ -97,7 +102,7 @@ const AppSidebar = () => {
         open={openCreateProductDialog}
         onOpenChange={setOpenCreateProductDialog}
       />
-    </Sidebar>
+    </>
   );
 };
 

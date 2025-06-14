@@ -16,41 +16,43 @@ const Header = () => {
   const [openCartItemsSheet, setOpenCartItemsSheet] = useState(false);
 
   return (
-    <header className="flex items-center ps-2 pe-4 py-2 border-b sticky top-0 bg-background z-50">
-      <SidebarTrigger />
-      <Separator orientation="vertical" className="mx-2 !h-8" />
-      <ThemeChanger />
-      <Link href="/products" className="mx-auto">
-        <H5>REEN</H5>
-      </Link>
-      <div className="flex items-center">
-        <UserButton
-          appearance={{
-            elements: {
-              userButtonOuterIdentifier: `${
-                theme === "light" || systemTheme === "light"
-                  ? ""
-                  : "!text-white"
-              }`,
-            },
-          }}
-          showName
-        />
+    <>
+      <header className="flex items-center ps-2 pe-4 py-2 border-b sticky top-0 bg-background z-50">
+        <SidebarTrigger />
         <Separator orientation="vertical" className="mx-2 !h-8" />
-        <Button
-          variant="outline"
-          size="icon"
-          className="w-8 h-8 rounded-full"
-          onClick={() => setOpenCartItemsSheet(true)}
-        >
-          <ShoppingCart />
-        </Button>
-      </div>
+        <ThemeChanger />
+        <Link href="/products" className="mx-auto">
+          <H5>REEN</H5>
+        </Link>
+        <div className="flex items-center">
+          <UserButton
+            appearance={{
+              elements: {
+                userButtonOuterIdentifier: `${
+                  theme === "light" || systemTheme === "light"
+                    ? ""
+                    : "!text-white"
+                }`,
+              },
+            }}
+            showName
+          />
+          <Separator orientation="vertical" className="mx-2 !h-8" />
+          <Button
+            variant="outline"
+            size="icon"
+            className="w-8 h-8 rounded-full"
+            onClick={() => setOpenCartItemsSheet(true)}
+          >
+            <ShoppingCart />
+          </Button>
+        </div>
+      </header>
       <CartItemsSheet
         open={openCartItemsSheet}
         onOpenChange={setOpenCartItemsSheet}
       />
-    </header>
+    </>
   );
 };
 
