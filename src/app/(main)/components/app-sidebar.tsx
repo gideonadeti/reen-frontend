@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ShoppingBag } from "lucide-react";
 
 import useUser from "../hooks/use-user";
+import UpdateUserRoleDialog from "./update-user-role-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Sidebar,
@@ -16,6 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useState } from "react";
 
 interface MenuItem {
   href: string;
@@ -35,6 +37,8 @@ const AppSidebar = () => {
   const pathname = usePathname();
   const { userQuery } = useUser();
   const user = userQuery.data;
+  const [openUpdateUserRoleDialog, setOpenUpdateUserRoleDialog] =
+    useState(false);
 
   return (
     <Sidebar>
@@ -60,13 +64,20 @@ const AppSidebar = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Button variant="outline">
+              <Button
+                variant="outline"
+                onClick={() => setOpenUpdateUserRoleDialog(true)}
+              >
                 Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
               </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+      <UpdateUserRoleDialog
+        open={openUpdateUserRoleDialog}
+        onOpenChange={setOpenUpdateUserRoleDialog}
+      />
     </Sidebar>
   );
 };
