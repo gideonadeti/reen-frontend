@@ -1,4 +1,5 @@
-import Loading from "@/app/loading";
+import { Loader, ShoppingCart } from "lucide-react";
+
 import useCartItems from "../hooks/use-cart-items";
 import CartItem from "./cart-item";
 import {
@@ -8,7 +9,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ShoppingCart } from "lucide-react";
 
 interface CartItemsSheetProps {
   open: boolean;
@@ -19,10 +19,6 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
   const { cartItemsQuery } = useCartItems();
   const cartItems = cartItemsQuery.data || [];
 
-  if (cartItemsQuery.isPending) {
-    return <Loading />;
-  }
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent>
@@ -30,7 +26,11 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
           <SheetTitle>My Cart</SheetTitle>
         </SheetHeader>
         <div className="flex-1">
-          {cartItems.length > 0 ? (
+          {cartItemsQuery.isPending ? (
+            <div className="h-4/5 flex items-center justify-center">
+              <Loader className="animate-spin" />
+            </div>
+          ) : cartItems.length > 0 ? (
             cartItems.map((cartItem) => (
               <CartItem key={cartItem.id} cartItem={cartItem} />
             ))
