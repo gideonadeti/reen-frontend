@@ -26,7 +26,7 @@ const Page = () => {
   const adminProducts = productsQuery.data?.filter(
     (p) => p.adminId === productAdminId
   );
-  const otherProducts = adminProducts?.filter((p) => p.id !== productId);
+  const otherProducts = adminProducts?.filter((p) => p.id !== productId) || [];
 
   if (productsQuery.isPending || userQuery.isPending) {
     return <Loading />;
@@ -73,18 +73,20 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="mt-8 max-w-4xl mx-auto">
-        <H3>
-          Other Products of{" "}
-          <Link
-            href={`/users/${user?.id}`}
-            className="hover:text-muted-foreground"
-          >
-            {product.admin.name}
-          </Link>
-        </H3>
-        <OtherProducts otherProducts={otherProducts || []} />
-      </div>
+      {otherProducts?.length > 0 && (
+        <div className="mt-8 max-w-4xl mx-auto">
+          <H3>
+            Other Products of{" "}
+            <Link
+              href={`/users/${user?.id}`}
+              className="hover:text-muted-foreground"
+            >
+              {product.admin.name}
+            </Link>
+          </H3>
+          <OtherProducts otherProducts={otherProducts} />
+        </div>
+      )}
     </div>
   );
 };
