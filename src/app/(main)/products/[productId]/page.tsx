@@ -80,7 +80,7 @@ const Page = () => {
             href={`/users/${user?.id}`}
             className="hover:text-muted-foreground"
           >
-            {user?.name}
+            {product.admin.name}
           </Link>
         </H3>
         <OtherProducts otherProducts={otherProducts || []} />
