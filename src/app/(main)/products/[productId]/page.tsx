@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Plus } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft, Plus } from "lucide-react";
 
 import ProductImagesCarousel from "./components/product-images-carousel";
 import useProducts from "../hooks/use-products";
@@ -13,11 +13,13 @@ import formatMoney from "../../utils/format-money";
 import { Product } from "../types/product";
 import { H1, H3, Muted } from "@/components/ui/typography";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
   const { productId } = useParams();
   const { productsQuery } = useProducts();
   const { userQuery } = useUser();
+  const router = useRouter();
   const product = productsQuery.data?.find((p) => p.id === productId);
   const user = userQuery.data;
   const adminProducts = productsQuery.data?.filter(
@@ -35,6 +37,15 @@ const Page = () => {
 
   return (
     <div className="pb-4 px-4">
+      <Button
+        variant="outline"
+        className="mt-2"
+        onClick={() => router.back()}
+        title="Back"
+      >
+        <ArrowLeft />
+      </Button>
+
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2">
           <ProductImagesCarousel imageUrls={product.imageUrls || []} />
