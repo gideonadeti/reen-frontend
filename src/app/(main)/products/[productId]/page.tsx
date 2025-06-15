@@ -20,10 +20,11 @@ const Page = () => {
   const { productsQuery } = useProducts();
   const { userQuery } = useUser();
   const router = useRouter();
-  const product = productsQuery.data?.find((p) => p.id === productId);
   const user = userQuery.data;
+  const product = productsQuery.data?.find((p) => p.id === productId);
+  const productAdminId = product?.adminId;
   const adminProducts = productsQuery.data?.filter(
-    (p) => p.adminId === user?.id
+    (p) => p.adminId === productAdminId
   );
   const otherProducts = adminProducts?.filter((p) => p.id !== productId);
 
