@@ -14,13 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
+import useUser from "@/app/(main)/hooks/use-user";
 
 interface RowActionsProps<TData> {
   row: Row<TData>;
 }
 
 const RowActions = <TData,>({ row }: RowActionsProps<TData>) => {
+  const { userQuery } = useUser();
+  const user = userQuery.data;
   const product = row.original as Product;
+  const isProductAdmin = product.adminId === user?.id;
 
   return (
     <DropdownMenu>
@@ -35,8 +39,12 @@ const RowActions = <TData,>({ row }: RowActionsProps<TData>) => {
         <DropdownMenuItem>
           <Link href={`/products/${product.id}`}>View product</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>Update product</DropdownMenuItem>
-        <DropdownMenuItem>Delete product</DropdownMenuItem>
+        {isProductAdmin && (
+          <>
+            <DropdownMenuItem>Update product</DropdownMenuItem>
+            <DropdownMenuItem>Delete product</DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
