@@ -103,7 +103,10 @@ const OtherProducts = ({ otherProducts }: { otherProducts: Product[] }) => {
 
 const OtherProduct = ({ otherProduct }: { otherProduct: Product }) => {
   return (
-    <div className="relative w-48 h-48 shrink-0 group cursor-pointer rounded-lg overflow-hidden">
+    <Link
+      href={`/products/${otherProduct.id}`}
+      className="relative w-48 h-48 shrink-0 group cursor-pointer rounded-lg overflow-hidden"
+    >
       <Image
         src={otherProduct.imageUrls[0] || "/placeholder.svg"}
         alt={`Image of ${otherProduct.name}`}
@@ -125,7 +128,7 @@ const OtherProduct = ({ otherProduct }: { otherProduct: Product }) => {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 export default Page;
