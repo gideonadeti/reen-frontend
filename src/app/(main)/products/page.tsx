@@ -15,7 +15,7 @@ const Page = () => {
   }
 
   return (
-    <div className="px-8 space-y-4">
+    <div className="p-4 pt-0 space-y-4">
       <H3>Products</H3>
       <div>
         <ProductsTable columns={columns} data={products} />
