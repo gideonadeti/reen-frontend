@@ -27,6 +27,7 @@ const Page = () => {
     (p) => p.adminId === productAdminId
   );
   const otherProducts = adminProducts?.filter((p) => p.id !== productId) || [];
+  const adminIsCurrentUser = user?.id === productAdminId;
 
   if (productsQuery.isPending || userQuery.isPending) {
     return <Loading />;
@@ -81,7 +82,7 @@ const Page = () => {
               href={`/users/${user?.id}`}
               className="hover:text-muted-foreground"
             >
-              {product.admin.name}
+              {adminIsCurrentUser ? "You" : product.admin.name}
             </Link>
           </H3>
           <OtherProducts otherProducts={otherProducts} />
