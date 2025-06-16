@@ -35,3 +35,17 @@ export const deleteProduct = async (axios: AxiosInstance, id: string) => {
     console.error("Error from `deleteProduct`:", error);
   }
 };
+
+export const updateProduct = async (
+  axios: AxiosInstance,
+  id: string,
+  formValues: z.infer<typeof formSchema>
+) => {
+  try {
+    const response = await axios.patch(`/products/${id}`, formValues);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `updateProduct`:", error);
+  }
+};

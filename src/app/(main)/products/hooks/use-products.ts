@@ -12,6 +12,7 @@ import {
   createProduct,
   deleteProduct,
   fetchProducts,
+  updateProduct,
 } from "../utils/query-functions";
 
 const useProducts = () => {
@@ -68,6 +69,50 @@ const useProducts = () => {
     },
   });
 
+  const updateProductMutation = useMutation<
+    Product,
+    AxiosError,
+    {
+      formValues: z.infer<typeof formSchema>;
+      id?: string;
+      closeCreateProductDialog: () => void;
+    }
+  >({
+    mutationFn: async ({ formValues, id }) => {
+      const axios = await getAxios();
+
+      if (!id) {
+        return createProduct(axios, formValues);
+      }
+
+      return updateProduct(axios, id, formValues);
+    },
+    onError: (error) => {
+      const description =
+        (error?.response?.data as { message: string })?.message ||
+        "Something went wrong";
+
+      toast.error(description);
+    },
+    onSuccess: (updatedProduct, { closeCreateProductDialog }) => {
+      closeCreateProductDialog();
+
+      toast.success("Product updated successfully");
+
+      queryClient.setQueryData<Product[]>(["products"], (oldProducts) => {
+        return oldProducts?.map((product) => {
+          if (product.id === updatedProduct.id) {
+            return {
+              ...product,
+              ...updatedProduct,
+            };
+          }
+          return product;
+        });
+      });
+    },
+  });
+
   const deleteProductMutation = useMutation<
     Product,
     AxiosError,
@@ -110,6 +155,7 @@ const useProducts = () => {
   return {
     productsQuery,
     createProductMutation,
+    updateProductMutation,
     deleteProductMutation,
   };
 };

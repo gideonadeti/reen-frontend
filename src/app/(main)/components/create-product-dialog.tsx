@@ -13,9 +13,11 @@ import {
   useEffect,
   useRef,
   useState,
+  useMemo,
 } from "react";
 
 import useProducts from "../products/hooks/use-products";
+import { Product } from "../products/types/product";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -63,28 +65,52 @@ export const formSchema = z.object({
 
 interface CreateProductDialogProps {
   open: boolean;
+  product?: Product;
   onOpenChange: (open: boolean) => void;
 }
 
 const CreateProductDialog = ({
   open,
+  product,
   onOpenChange,
 }: CreateProductDialogProps) => {
   const [generateCount, setGenerateCount] = useState(1);
-  const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>([]);
-  const [hasGeneratedImages, setHasGeneratedImages] = useState(false);
-  const { createProductMutation } = useProducts();
+  const [generatedImageUrls, setGeneratedImageUrls] = useState<string[]>(
+    product?.imageUrls || []
+  );
+  const [hasGeneratedImages, setHasGeneratedImages] = useState(
+    !!product || false
+  );
+  const { createProductMutation, updateProductMutation } = useProducts();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      quantity: 0,
-      imageUrls: [],
+      name: product?.name || "",
+      description: product?.description || "",
+      price: product?.price || 0,
+      quantity: product?.quantity || 0,
+      imageUrls: product?.imageUrls || [],
     },
   });
+
+  // Watch all form values for changes
+  const watchedValues = form.watch();
+
+  // Memoized change detection
+  const isUpdated = useMemo(() => {
+    if (!product) return true; // Always allow submit for create mode
+
+    return (
+      watchedValues.name !== product.name ||
+      watchedValues.description !== product.description ||
+      watchedValues.price !== product.price ||
+      watchedValues.quantity !== product.quantity ||
+      JSON.stringify(watchedValues.imageUrls) !==
+        JSON.stringify(product.imageUrls)
+    );
+  }, [watchedValues, product]);
 
   const generateImageUrls = useCallback((count: number) => {
     const newImageUrls = Array.from(
@@ -106,28 +132,63 @@ const CreateProductDialog = ({
     onOpenChange(false);
   }, [form, onOpenChange]);
 
+  // Reset form when product changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      const defaultValues = {
+        name: product?.name || "",
+        description: product?.description || "",
+        price: product?.price || 0,
+        quantity: product?.quantity || 0,
+        imageUrls: product?.imageUrls || [],
+      };
+
+      form.reset(defaultValues);
+      setGeneratedImageUrls(product?.imageUrls || []);
+    }
+  }, [open, product, form]);
+
   // Only update form and trigger validation after images have been generated
   useEffect(() => {
-    if (hasGeneratedImages) {
+    if (
+      hasGeneratedImages ||
+      (product && generatedImageUrls.length !== product.imageUrls.length)
+    ) {
       form.setValue("imageUrls", generatedImageUrls);
       form.trigger("imageUrls");
     }
-  }, [generatedImageUrls, hasGeneratedImages, form]);
+  }, [generatedImageUrls, hasGeneratedImages, form, product]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    createProductMutation.mutate({
-      formValues: values,
-      closeCreateProductDialog,
-    });
+    if (!product) {
+      createProductMutation.mutate({
+        formValues: values,
+        closeCreateProductDialog,
+      });
+    } else {
+      updateProductMutation.mutate({
+        formValues: values,
+        id: product.id,
+        closeCreateProductDialog,
+      });
+    }
   };
+
+  const isSubmitDisabled =
+    !form.formState.isValid ||
+    createProductMutation.isPending ||
+    updateProductMutation.isPending ||
+    (product && !isUpdated);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create a Product</DialogTitle>
+          <DialogTitle>{product ? "Update" : "Create"} a Product</DialogTitle>
           <DialogDescription>
-            Fill out the form below to create a new product
+            {product
+              ? "Modify the form below to update this product"
+              : "Fill out the form below to create a new product"}
           </DialogDescription>
         </DialogHeader>
 
@@ -245,7 +306,7 @@ const CreateProductDialog = ({
                 render={() => (
                   <FormItem>
                     <FormLabel>
-                      Generated Image URLs ({generatedImageUrls.length}/6)
+                      Image URLs ({generatedImageUrls.length}/6)
                     </FormLabel>
                     <FormControl>
                       {generatedImageUrls.length > 0 ? (
@@ -281,15 +342,18 @@ const CreateProductDialog = ({
             type="button"
             variant="secondary"
             onClick={closeCreateProductDialog}
-            disabled={createProductMutation.isPending}
+            disabled={
+              createProductMutation.isPending || updateProductMutation.isPending
+            }
           >
             Cancel
           </Button>
           <Button
             onClick={() => submitButtonRef.current?.click()}
-            disabled={!form.formState.isValid}
+            disabled={isSubmitDisabled}
           >
-            {createProductMutation.isPending ? (
+            {createProductMutation.isPending ||
+            updateProductMutation.isPending ? (
               <span className="flex items-center">
                 <Loader className="animate-spin" />
                 <span>Submitting...</span>

@@ -6,6 +6,7 @@ import { MoreHorizontal } from "lucide-react";
 
 import useUser from "@/app/(main)/hooks/use-user";
 import DeleteConfirmationDialog from "@/app/(main)/components/delete-confirmation-dialog";
+import CreateProductDialog from "@/app/(main)/components/create-product-dialog";
 import { Product } from "../../types/product";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -26,6 +27,7 @@ const RowActions = <TData,>({ row }: RowActionsProps<TData>) => {
   const { userQuery } = useUser();
   const [openDeleteConfirmationDialog, setOpenDeleteConfirmationDialog] =
     useState(false);
+  const [openCreateProductDialog, setOpenCreateProductDialog] = useState(false);
   const user = userQuery.data;
   const product = row.original as Product;
   const isProductAdmin = product.adminId === user?.id;
@@ -46,7 +48,11 @@ const RowActions = <TData,>({ row }: RowActionsProps<TData>) => {
           </DropdownMenuItem>
           {isProductAdmin && (
             <>
-              <DropdownMenuItem>Update product</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setOpenCreateProductDialog(true)}
+              >
+                Update product
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setOpenDeleteConfirmationDialog(true)}
               >
@@ -60,6 +66,11 @@ const RowActions = <TData,>({ row }: RowActionsProps<TData>) => {
         open={openDeleteConfirmationDialog}
         subject={{ key: "Product", value: product }}
         onOpenChange={setOpenDeleteConfirmationDialog}
+      />
+      <CreateProductDialog
+        open={openCreateProductDialog}
+        onOpenChange={setOpenCreateProductDialog}
+        product={product}
       />
     </>
   );
