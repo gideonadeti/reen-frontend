@@ -25,3 +25,13 @@ export const createProduct = async (
     console.error("Error from `createProduct`:", error);
   }
 };
+
+export const deleteProduct = async (axios: AxiosInstance, id: string) => {
+  try {
+    const response = await axios.delete(`/products/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `deleteProduct`:", error);
+  }
+};
