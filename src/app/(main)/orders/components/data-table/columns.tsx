@@ -26,7 +26,7 @@ const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const order = row.original as Order;
 
-      return <span className="ps-4">{order.orderItems.length}</span>;
+      return <span className="ps-20">{order.orderItems.length}</span>;
     },
   },
   {
@@ -35,7 +35,7 @@ const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const order = row.original as Order;
 
-      return <span className="ps-4">{formatDate(order.createdAt)}</span>;
+      return <span>{formatDate(order.createdAt)}</span>;
     },
   },
   {
