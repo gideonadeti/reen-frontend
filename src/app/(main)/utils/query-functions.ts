@@ -90,3 +90,15 @@ export const updateUserRole = async (axios: AxiosInstance, role: UserRole) => {
     throw error;
   }
 };
+
+export const checkout = async (axios: AxiosInstance) => {
+  try {
+    const response = await axios.post("/checkout");
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `checkout`:", error);
+
+    throw error;
+  }
+};
