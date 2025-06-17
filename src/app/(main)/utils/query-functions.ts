@@ -38,7 +38,8 @@ export const createCartItem = async (
 
 export const updateCartItem = async (
   axios: AxiosInstance,
-  { id, productId, quantity }: CreateCartItemFormValues & { id: string }
+  id: string,
+  { productId, quantity }: CreateCartItemFormValues
 ) => {
   try {
     const response = await axios.patch(`/cart-items/${id}`, {

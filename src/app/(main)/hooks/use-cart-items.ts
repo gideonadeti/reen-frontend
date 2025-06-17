@@ -91,7 +91,7 @@ const useCartItems = () => {
     mutationFn: async ({ id, productId, formValues: { quantity } }) => {
       const axios = await getAxios();
 
-      return updateCartItem(axios, { id, productId, quantity });
+      return updateCartItem(axios, id, { productId, quantity });
     },
     onError: (error) => {
       const description =
