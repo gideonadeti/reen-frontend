@@ -37,7 +37,7 @@ const CartItem = ({ cartItem }: { cartItem: CartItemType }) => {
           </div>
           <div className="flex flex-col justify-between items-end">
             <span className="font-medium">
-              {formatMoney(cartItem.product.price)}
+              {formatMoney(cartItem.product.price * cartItem.quantity)}
             </span>
             <div className="border rounded-full flex items-center gap-2 px-2 py-1">
               <Button
