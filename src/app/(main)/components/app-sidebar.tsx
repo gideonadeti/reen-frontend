@@ -15,11 +15,13 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import useProducts from "../products/hooks/use-products";
 
 interface MenuItem {
   href: string;
@@ -37,6 +39,8 @@ const menuItems: MenuItem[] = [
 
 const AppSidebar = () => {
   const pathname = usePathname();
+  const { productsQuery } = useProducts();
+  const products = productsQuery.data || [];
   const { userQuery } = useUser();
   const user = userQuery.data;
   const [openUpdateUserRoleDialog, setOpenUpdateUserRoleDialog] =
@@ -62,6 +66,11 @@ const AppSidebar = () => {
                         <span>{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
+                    {item.label === "Products" && (
+                      <SidebarMenuBadge>
+                        {products.length > 99 ? "99+" : products.length}
+                      </SidebarMenuBadge>
+                    )}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
