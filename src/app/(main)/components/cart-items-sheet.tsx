@@ -37,7 +37,7 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
                 <CartItem key={cartItem.id} cartItem={cartItem} />
               ))
             ) : (
-              <div className="h-4/5 flex flex-col items-center justify-center">
+              <div className="h-[68vh] flex flex-col items-center justify-center">
                 <ShoppingCart size={60} />
                 <p className="font-medium text-lg">Your cart is empty.</p>
               </div>
