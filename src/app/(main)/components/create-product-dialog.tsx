@@ -55,6 +55,7 @@ export const formSchema = z.object({
     .max(2000, { message: "Price must be less than 2000" }),
   quantity: z.coerce
     .number()
+    .int({ message: "Quantity must be an integer" })
     .min(1, { message: "Quantity must be a positive number" })
     .max(2000, { message: "Quantity must be less than 2000" }),
   imageUrls: z

@@ -47,6 +47,7 @@ const CreateCartItemDialog = ({
   createCartItemFormSchema = z.object({
     quantity: z.coerce
       .number()
+      .int({ message: "Quantity must be an integer" })
       .min(1, {
         message: "Quantity must be a positive number",
       })
