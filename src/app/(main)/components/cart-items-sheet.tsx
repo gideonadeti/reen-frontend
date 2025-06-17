@@ -2,6 +2,7 @@ import { Loader, ShoppingCart } from "lucide-react";
 
 import useCartItems from "../hooks/use-cart-items";
 import CartItem from "./cart-item";
+import formatMoney from "../utils/format-money";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
@@ -10,6 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Muted } from "@/components/ui/typography";
 
 interface CartItemsSheetProps {
   open: boolean;
@@ -19,6 +21,10 @@ interface CartItemsSheetProps {
 const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
   const { cartItemsQuery } = useCartItems();
   const cartItems = cartItemsQuery.data || [];
+  const totalCost = cartItems.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -45,7 +51,10 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
           </div>
         </ScrollArea>
         <SheetFooter>
-          <div></div>
+          <div className="flex items-center justify-between px-4 py-2 border-b-2">
+            <Muted className="font-medium">Total:</Muted>
+            <span className="font-semibold">{formatMoney(totalCost)}</span>
+          </div>
           <button className="bg-blue-600 rounded-full h-8 font-medium cursor-pointer hover:bg-blue-800">
             Proceed to checkout
           </button>
