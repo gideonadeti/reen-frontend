@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Loader } from "lucide-react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import CartItemsSheet from "@/app/(main)/components/cart-items-sheet";
 import useCartItems from "@/app/(main)/hooks/use-cart-items";
+import { CartItem } from "@/app/(main)/types/cart-item";
 import { Product } from "../../types/product";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -33,15 +34,17 @@ export let createCartItemFormSchema: z.ZodObject<{
 interface CreateCartItemDialogProps {
   open: boolean;
   product: Product;
+  cartItem?: CartItem;
   onOpenChange: (open: boolean) => void;
 }
 
 const CreateCartItemDialog = ({
   open,
   product,
+  cartItem,
   onOpenChange,
 }: CreateCartItemDialogProps) => {
-  const { createCartItemMutation } = useCartItems();
+  const { createCartItemMutation, updateCartItemMutation } = useCartItems();
   const [openCartItemsSheet, setOpenCartItemsSheet] = useState(false);
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   createCartItemFormSchema = z.object({
@@ -58,9 +61,20 @@ const CreateCartItemDialog = ({
   const form = useForm<z.infer<typeof createCartItemFormSchema>>({
     resolver: zodResolver(createCartItemFormSchema),
     defaultValues: {
-      quantity: 1,
+      quantity: cartItem?.quantity || 1,
     },
   });
+
+  // Reset form when cart item changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      const defaultValues = {
+        quantity: cartItem?.quantity || 1,
+      };
+
+      form.reset(defaultValues);
+    }
+  }, [open, cartItem, form]);
 
   const closeCreateCartItemDialog = () => {
     form.reset();
@@ -69,12 +83,21 @@ const CreateCartItemDialog = ({
   };
 
   const onSubmit = (values: z.infer<typeof createCartItemFormSchema>) => {
-    createCartItemMutation.mutate({
-      productId: product.id,
-      formValues: values,
-      closeCreateCartItemDialog,
-      setOpenCartItemsSheet,
-    });
+    if (!cartItem) {
+      createCartItemMutation.mutate({
+        productId: product.id,
+        formValues: values,
+        closeCreateCartItemDialog,
+        setOpenCartItemsSheet,
+      });
+    } else {
+      updateCartItemMutation.mutate({
+        id: cartItem.id,
+        productId: product.id,
+        formValues: values,
+        closeCreateCartItemDialog,
+      });
+    }
   };
 
   return (
@@ -82,7 +105,9 @@ const CreateCartItemDialog = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Cart Item</DialogTitle>
+            <DialogTitle>
+              {cartItem ? "Update" : "Create"} Cart Item
+            </DialogTitle>
             <DialogDescription>
               Enter a quantity between 1 and {product.quantity}.
             </DialogDescription>
@@ -110,17 +135,23 @@ const CreateCartItemDialog = ({
               type="button"
               variant="secondary"
               onClick={() => closeCreateCartItemDialog()}
-              disabled={createCartItemMutation.isPending}
+              disabled={
+                createCartItemMutation.isPending ||
+                updateCartItemMutation.isPending
+              }
             >
               Cancel
             </Button>
             <Button
               disabled={
-                createCartItemMutation.isPending || !form.formState.isValid
+                createCartItemMutation.isPending ||
+                updateCartItemMutation.isPending ||
+                !form.formState.isValid
               }
               onClick={() => submitButtonRef.current?.click()}
             >
-              {createCartItemMutation.isPending ? (
+              {createCartItemMutation.isPending ||
+              updateCartItemMutation.isPending ? (
                 <span className="flex items-center">
                   <Loader className="animate-spin" />
                   <span>Submitting...</span>

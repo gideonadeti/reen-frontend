@@ -36,6 +36,24 @@ export const createCartItem = async (
   }
 };
 
+export const updateCartItem = async (
+  axios: AxiosInstance,
+  { id, productId, quantity }: createCartItemFormValues & { id: string }
+) => {
+  try {
+    const response = await axios.patch(`/cart-items/${id}`, {
+      productId,
+      quantity,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `updateCartItem`:", error);
+
+    throw error;
+  }
+};
+
 export const fetchUser = async (axios: AxiosInstance, clerkId: string) => {
   try {
     const response = await axios.get(`auth/users/${clerkId}`);

@@ -6,10 +6,14 @@ import { z } from "zod";
 
 import useGetAxios from "./use-get-axios";
 import useProducts from "../products/hooks/use-products";
-import { createCartItem, fetchCartItems } from "../utils/query-functions";
 import { CartItem } from "../types/cart-item";
 import { createCartItemFormSchema } from "../products/[productId]/components/create-cart-item-dialog";
 import { Product } from "../products/types/product";
+import {
+  createCartItem,
+  fetchCartItems,
+  updateCartItem,
+} from "../utils/query-functions";
 
 const useCartItems = () => {
   const getAxios = useGetAxios();
@@ -73,6 +77,48 @@ const useCartItems = () => {
     },
   });
 
+  const updateCartItemMutation = useMutation<
+    CartItem,
+    AxiosError,
+    {
+      id: string;
+      productId: string;
+      formValues: z.infer<typeof createCartItemFormSchema>;
+      closeCreateCartItemDialog: () => void;
+    }
+  >({
+    mutationFn: async ({ id, productId, formValues: { quantity } }) => {
+      const axios = await getAxios();
+
+      return updateCartItem(axios, { id, productId, quantity });
+    },
+    onError: (error) => {
+      const description =
+        (error?.response?.data as { message: string })?.message ||
+        "Something went wrong";
+
+      toast.error(description);
+    },
+    onSuccess: (updatedCartItem, { closeCreateCartItemDialog }) => {
+      closeCreateCartItemDialog();
+
+      toast.success("Cart item updated successfully");
+
+      queryClient.setQueryData<CartItem[]>(["cart-items"], (oldCartItems) => {
+        return oldCartItems?.map((cartItem) => {
+          if (cartItem.id === updatedCartItem.id) {
+            return {
+              ...cartItem,
+              ...updatedCartItem,
+            };
+          }
+
+          return cartItem;
+        });
+      });
+    },
+  });
+
   useEffect(() => {
     if (cartItemsQuery.isError) {
       console.error("Error from `useCartItems`:", cartItemsQuery.error);
@@ -84,6 +130,7 @@ const useCartItems = () => {
   return {
     cartItemsQuery,
     createCartItemMutation,
+    updateCartItemMutation,
   };
 };
 
