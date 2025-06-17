@@ -51,9 +51,12 @@ const DeleteConfirmationDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete {subject.key}</DialogTitle>
+          <DialogTitle>
+            Delete {subject.key === "Cart-Item" ? "Cart Item" : subject.key}
+          </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this {subject.key}? This action
+            Are you sure you want to delete this{" "}
+            {subject.key === "Cart-Item" ? "cart item" : "product"}? This action
             cannot be undone.
           </DialogDescription>
         </DialogHeader>
