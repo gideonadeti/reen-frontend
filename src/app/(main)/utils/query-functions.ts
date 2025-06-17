@@ -8,6 +8,8 @@ export const fetchCartItems = async (axios: AxiosInstance) => {
     return response.data;
   } catch (error) {
     console.error("Error from `fetchCartItems`:", error);
+
+    throw error;
   }
 };
 
@@ -41,6 +43,8 @@ export const fetchUser = async (axios: AxiosInstance, clerkId: string) => {
     return response.data;
   } catch (error) {
     console.error("Error from `fetchUser`:", error);
+
+    throw error;
   }
 };
 
@@ -51,5 +55,7 @@ export const updateUserRole = async (axios: AxiosInstance, role: UserRole) => {
     return response.data;
   } catch (error) {
     console.error("Error from `updateUserRole`:", error);
+
+    throw error;
   }
 };

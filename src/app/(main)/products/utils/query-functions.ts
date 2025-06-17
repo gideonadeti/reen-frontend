@@ -10,6 +10,8 @@ export const fetchProducts = async (axios: AxiosInstance) => {
     return response.data;
   } catch (error) {
     console.error("Error from `fetchProducts`:", error);
+
+    throw error;
   }
 };
 
@@ -23,6 +25,8 @@ export const createProduct = async (
     return response.data;
   } catch (error) {
     console.error("Error from `createProduct`:", error);
+
+    throw error;
   }
 };
 
@@ -33,6 +37,8 @@ export const deleteProduct = async (axios: AxiosInstance, id: string) => {
     return response.data;
   } catch (error) {
     console.error("Error from `deleteProduct`:", error);
+
+    throw error;
   }
 };
 
@@ -47,5 +53,7 @@ export const updateProduct = async (
     return response.data;
   } catch (error) {
     console.error("Error from `updateProduct`:", error);
+
+    throw error;
   }
 };
