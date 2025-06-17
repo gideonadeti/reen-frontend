@@ -7,6 +7,7 @@ import Header from "@/app/(main)/components/data-table/header";
 import { OrderItem } from "../../../types/order";
 import ProductImagesPopover from "@/app/(main)/components/product-images-popover";
 import formatMoney from "@/app/(main)/utils/format-money";
+import { Muted } from "@/components/ui/typography";
 
 const columns: ColumnDef<OrderItem>[] = [
   {
@@ -53,8 +54,14 @@ const columns: ColumnDef<OrderItem>[] = [
     header: ({ column }) => <Header column={column} title="Sub Total" />,
     cell: ({ row }) => {
       const orderItem = row.original as OrderItem;
+      const costPerItem = orderItem.price / orderItem.quantity;
 
-      return <span className="ps-6">{formatMoney(orderItem.price)}</span>;
+      return (
+        <div className="ps-6">
+          <span>{formatMoney(orderItem.price)}</span>
+          <Muted className="text-xs">{formatMoney(costPerItem)} each</Muted>
+        </div>
+      );
     },
   },
 ];
