@@ -13,14 +13,14 @@ export const fetchCartItems = async (axios: AxiosInstance) => {
   }
 };
 
-interface createCartItemFormValues {
+interface CreateCartItemFormValues {
   productId: string;
   quantity: number;
 }
 
 export const createCartItem = async (
   axios: AxiosInstance,
-  { productId, quantity }: createCartItemFormValues
+  { productId, quantity }: CreateCartItemFormValues
 ) => {
   try {
     const response = await axios.post("/cart-items", {
@@ -38,7 +38,7 @@ export const createCartItem = async (
 
 export const updateCartItem = async (
   axios: AxiosInstance,
-  { id, productId, quantity }: createCartItemFormValues & { id: string }
+  { id, productId, quantity }: CreateCartItemFormValues & { id: string }
 ) => {
   try {
     const response = await axios.patch(`/cart-items/${id}`, {
