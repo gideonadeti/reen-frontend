@@ -89,8 +89,8 @@ const CreateProductDialog = ({
     defaultValues: {
       name: product?.name || "",
       description: product?.description || "",
-      price: product?.price || 0,
-      quantity: product?.quantity || 0,
+      price: product?.price || 1,
+      quantity: product?.quantity || 1,
       imageUrls: product?.imageUrls || [],
     },
   });
@@ -138,8 +138,8 @@ const CreateProductDialog = ({
       const defaultValues = {
         name: product?.name || "",
         description: product?.description || "",
-        price: product?.price || 0,
-        quantity: product?.quantity || 0,
+        price: product?.price || 1,
+        quantity: product?.quantity || 1,
         imageUrls: product?.imageUrls || [],
       };
 
