@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
 import { z } from "zod";
 
-import { formSchema } from "../../components/create-product-dialog";
+import { createProductFormSchema } from "../../components/create-product-dialog";
 
 export const fetchProducts = async (axios: AxiosInstance) => {
   try {
@@ -17,7 +17,7 @@ export const fetchProducts = async (axios: AxiosInstance) => {
 
 export const createProduct = async (
   axios: AxiosInstance,
-  formValues: z.infer<typeof formSchema>
+  formValues: z.infer<typeof createProductFormSchema>
 ) => {
   try {
     const response = await axios.post("/products", formValues);
@@ -45,7 +45,7 @@ export const deleteProduct = async (axios: AxiosInstance, id: string) => {
 export const updateProduct = async (
   axios: AxiosInstance,
   id: string,
-  formValues: z.infer<typeof formSchema>
+  formValues: z.infer<typeof createProductFormSchema>
 ) => {
   try {
     const response = await axios.patch(`/products/${id}`, formValues);

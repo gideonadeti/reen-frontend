@@ -46,7 +46,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export const formSchema = z.object({
+export const createProductFormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
   price: z.coerce
@@ -85,8 +85,8 @@ const CreateProductDialog = ({
   const { createProductMutation, updateProductMutation } = useProducts();
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof createProductFormSchema>>({
+    resolver: zodResolver(createProductFormSchema),
     defaultValues: {
       name: product?.name || "",
       description: product?.description || "",
@@ -160,7 +160,7 @@ const CreateProductDialog = ({
     }
   }, [generatedImageUrls, hasGeneratedImages, form, product]);
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: z.infer<typeof createProductFormSchema>) => {
     if (!product) {
       createProductMutation.mutate({
         formValues: values,

@@ -7,7 +7,7 @@ import { z } from "zod";
 import useGetAxios from "../../hooks/use-get-axios";
 import useUser from "../../hooks/use-user";
 import { Product } from "../types/product";
-import { formSchema } from "../../components/create-product-dialog";
+import { createProductFormSchema } from "../../components/create-product-dialog";
 import {
   createProduct,
   deleteProduct,
@@ -33,7 +33,7 @@ const useProducts = () => {
     Product,
     AxiosError,
     {
-      formValues: z.infer<typeof formSchema>;
+      formValues: z.infer<typeof createProductFormSchema>;
       closeCreateProductDialog: () => void;
     }
   >({
@@ -73,7 +73,7 @@ const useProducts = () => {
     Product,
     AxiosError,
     {
-      formValues: z.infer<typeof formSchema>;
+      formValues: z.infer<typeof createProductFormSchema>;
       id?: string;
       closeCreateProductDialog: () => void;
     }
