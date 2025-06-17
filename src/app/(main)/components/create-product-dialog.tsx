@@ -350,8 +350,7 @@ const CreateProductDialog = ({
             onClick={() => submitButtonRef.current?.click()}
             disabled={isSubmitDisabled}
           >
-            {createProductMutation.isPending ||
-            updateProductMutation.isPending ? (
+            {isSubmitting ? (
               <span className="flex items-center">
                 <Loader className="animate-spin" />
                 <span>Submitting...</span>

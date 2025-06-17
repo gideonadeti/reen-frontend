@@ -145,8 +145,7 @@ const CreateCartItemDialog = ({
               disabled={isSubmitting || !form.formState.isValid}
               onClick={() => submitButtonRef.current?.click()}
             >
-              {createCartItemMutation.isPending ||
-              updateCartItemMutation.isPending ? (
+              {isSubmitting ? (
                 <span className="flex items-center">
                   <Loader className="animate-spin" />
                   <span>Submitting...</span>
