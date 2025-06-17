@@ -175,11 +175,10 @@ const CreateProductDialog = ({
     }
   };
 
+  const isSubmitting =
+    createProductMutation.isPending || updateProductMutation.isPending;
   const isSubmitDisabled =
-    !form.formState.isValid ||
-    createProductMutation.isPending ||
-    updateProductMutation.isPending ||
-    (product && !isUpdated);
+    !form.formState.isValid || isSubmitting || (product && !isUpdated);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -343,9 +342,7 @@ const CreateProductDialog = ({
             type="button"
             variant="secondary"
             onClick={closeCreateProductDialog}
-            disabled={
-              createProductMutation.isPending || updateProductMutation.isPending
-            }
+            disabled={isSubmitting}
           >
             Cancel
           </Button>

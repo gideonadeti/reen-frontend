@@ -46,6 +46,8 @@ const CreateCartItemDialog = ({
 }: CreateCartItemDialogProps) => {
   const { createCartItemMutation, updateCartItemMutation } = useCartItems();
   const [openCartItemsSheet, setOpenCartItemsSheet] = useState(false);
+  const isSubmitting =
+    createCartItemMutation.isPending || updateCartItemMutation.isPending;
   const submitButtonRef = useRef<HTMLButtonElement>(null);
   createCartItemFormSchema = z.object({
     quantity: z.coerce
@@ -135,19 +137,12 @@ const CreateCartItemDialog = ({
               type="button"
               variant="secondary"
               onClick={() => closeCreateCartItemDialog()}
-              disabled={
-                createCartItemMutation.isPending ||
-                updateCartItemMutation.isPending
-              }
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
             <Button
-              disabled={
-                createCartItemMutation.isPending ||
-                updateCartItemMutation.isPending ||
-                !form.formState.isValid
-              }
+              disabled={isSubmitting || !form.formState.isValid}
               onClick={() => submitButtonRef.current?.click()}
             >
               {createCartItemMutation.isPending ||
