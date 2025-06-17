@@ -1,33 +1,59 @@
 import Image from "next/image";
-import { CartItem as CartItemType } from "../types/cart-item";
+import { Minus, Plus, X } from "lucide-react";
+
 import formatMoney from "../utils/format-money";
+import { CartItem as CartItemType } from "../types/cart-item";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Muted } from "@/components/ui/typography";
 
 const CartItem = ({ cartItem }: { cartItem: CartItemType }) => {
   return (
-    <div className="relative">
+    <div className="relative pb-4">
       <div className="flex justify-between">
-        <div>
-          <div className="border rounded">
+        <div className="flex items-center gap-2">
+          <div className="border rounded w-16 h-16 relative">
             <Image
               src={cartItem.product.imageUrls[0]}
               alt={`Image of ${cartItem.product.name}`}
+              fill
               className="object-cover"
             />
           </div>
-          <p>{cartItem.product.name}</p>
+          <div>
+            <span className="font-medium">{cartItem.product.name}</span>
+            <Muted className="text-sm w-32 truncate">
+              {cartItem.product.description}
+            </Muted>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <p>{formatMoney(cartItem.product.price)}</p>
-          <div className="border rounded-full">
-            <button className="text-muted-foreground">-</button>
+        <div className="flex flex-col justify-between items-end">
+          <span className="font-medium">
+            {formatMoney(cartItem.product.price)}
+          </span>
+          <div className="border rounded-full flex items-center gap-2 px-2 py-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground rounded-full w-6 h-6"
+            >
+              <Plus />
+            </Button>
             <p>{cartItem.quantity}</p>
-            <button className="text-muted-foreground">+</button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground p-0 rounded-full w-6 h-6"
+            >
+              <Minus />
+            </Button>
           </div>
         </div>
       </div>
-      <Button variant="ghost" size="sm">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute -top-2 -left-2 p-0 rounded-full w-6 h-6 bg-muted"
+      >
         <X />
       </Button>
     </div>

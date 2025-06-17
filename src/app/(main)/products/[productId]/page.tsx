@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Plus } from "lucide-react";
+import { useState } from "react";
 
 import ProductImagesCarousel from "./components/product-images-carousel";
+import CreateCartItemDialog from "./components/create-cart-item-dialog";
 import useProducts from "../hooks/use-products";
 import Loading from "@/app/loading";
 import useUser from "../../hooks/use-user";
@@ -19,6 +21,8 @@ const Page = () => {
   const { productId } = useParams();
   const { productsQuery } = useProducts();
   const { userQuery } = useUser();
+  const [openCreateCartItemDialog, setOpenCreateCartItemDialog] =
+    useState(false);
   const router = useRouter();
   const user = userQuery.data;
   const product = productsQuery.data?.find((p) => p.id === productId);
@@ -38,57 +42,67 @@ const Page = () => {
   }
 
   return (
-    <div className="pb-4 px-4">
-      <Button
-        variant="outline"
-        className="mt-2"
-        onClick={() => router.back()}
-        title="Back"
-      >
-        <ArrowLeft />
-      </Button>
+    <>
+      <div className="pb-4 px-4">
+        <Button
+          variant="outline"
+          className="mt-2"
+          onClick={() => router.back()}
+          title="Back"
+        >
+          <ArrowLeft />
+        </Button>
 
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2">
-          <ProductImagesCarousel imageUrls={product.imageUrls || []} />
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2">
+            <ProductImagesCarousel imageUrls={product.imageUrls || []} />
+          </div>
+
+          <div className="flex flex-col divide-y">
+            <div className="pb-4">
+              <H1>{product.name}</H1>
+              <span className="bg-blue-600 rounded-full font-medium px-3 py-1">
+                {formatMoney(product.price)}
+              </span>
+            </div>
+
+            <div className="py-4">
+              <Muted className="text-sm">{product.description}</Muted>
+            </div>
+
+            <div className="mt-auto">
+              <button
+                onClick={() => setOpenCreateCartItemDialog(true)}
+                className="relative bg-blue-600 hover:bg-blue-800 cursor-pointer rounded-full h-12 font-medium px-3 w-full flex items-center justify-center"
+              >
+                <Plus className="absolute left-4 w-4 h-4" />
+                <span>Add To Cart</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col divide-y">
-          <div className="pb-4">
-            <H1>{product.name}</H1>
-            <span className="bg-blue-600 rounded-full font-medium px-3 py-1">
-              {formatMoney(product.price)}
-            </span>
+        {otherProducts?.length > 0 && (
+          <div className="mt-8 max-w-4xl mx-auto">
+            <H3>
+              Other Products of{" "}
+              <Link
+                href={`/users/${user?.id}`}
+                className="hover:text-muted-foreground"
+              >
+                {adminIsCurrentUser ? "You" : product.admin.name}
+              </Link>
+            </H3>
+            <OtherProducts otherProducts={otherProducts} />
           </div>
-
-          <div className="py-4">
-            <Muted className="text-sm">{product.description}</Muted>
-          </div>
-
-          <div className="mt-auto">
-            <button className="relative bg-blue-600 hover:bg-blue-800 cursor-pointer rounded-full h-12 font-medium px-3 w-full flex items-center justify-center">
-              <Plus className="absolute left-4 w-4 h-4" />
-              <span>Add To Cart</span>
-            </button>
-          </div>
-        </div>
+        )}
       </div>
-
-      {otherProducts?.length > 0 && (
-        <div className="mt-8 max-w-4xl mx-auto">
-          <H3>
-            Other Products of{" "}
-            <Link
-              href={`/users/${user?.id}`}
-              className="hover:text-muted-foreground"
-            >
-              {adminIsCurrentUser ? "You" : product.admin.name}
-            </Link>
-          </H3>
-          <OtherProducts otherProducts={otherProducts} />
-        </div>
-      )}
-    </div>
+      <CreateCartItemDialog
+        open={openCreateCartItemDialog}
+        product={product}
+        onOpenChange={setOpenCreateCartItemDialog}
+      />
+    </>
   );
 };
 

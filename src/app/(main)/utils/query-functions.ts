@@ -11,6 +11,29 @@ export const fetchCartItems = async (axios: AxiosInstance) => {
   }
 };
 
+interface createCartItemFormValues {
+  productId: string;
+  quantity: number;
+}
+
+export const createCartItem = async (
+  axios: AxiosInstance,
+  { productId, quantity }: createCartItemFormValues
+) => {
+  try {
+    const response = await axios.post("/cart-items", {
+      productId,
+      quantity,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `createCartItem`:", error);
+
+    throw error;
+  }
+};
+
 export const fetchUser = async (axios: AxiosInstance, clerkId: string) => {
   try {
     const response = await axios.get(`auth/users/${clerkId}`);
