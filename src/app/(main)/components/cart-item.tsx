@@ -4,12 +4,15 @@ import { useState } from "react";
 
 import formatMoney from "../utils/format-money";
 import CreateCartItemDialog from "../products/[productId]/components/create-cart-item-dialog";
+import DeleteConfirmationDialog from "./delete-confirmation-dialog";
 import { CartItem as CartItemType } from "../types/cart-item";
 import { Button } from "@/components/ui/button";
 import { Muted } from "@/components/ui/typography";
 
 const CartItem = ({ cartItem }: { cartItem: CartItemType }) => {
   const [openCreateCartItemDialog, setOpenCreateCartItemDialog] =
+    useState(false);
+  const [openDeleteConfirmationDialog, setOpenDeleteConfirmationDialog] =
     useState(false);
 
   return (
@@ -61,6 +64,7 @@ const CartItem = ({ cartItem }: { cartItem: CartItemType }) => {
           variant="ghost"
           size="icon"
           className="absolute -top-2 -left-2 p-0 rounded-full w-6 h-6 bg-muted"
+          onClick={() => setOpenDeleteConfirmationDialog(true)}
         >
           <X />
         </Button>
@@ -70,6 +74,11 @@ const CartItem = ({ cartItem }: { cartItem: CartItemType }) => {
         onOpenChange={setOpenCreateCartItemDialog}
         product={cartItem.product}
         cartItem={cartItem}
+      />
+      <DeleteConfirmationDialog
+        open={openDeleteConfirmationDialog}
+        onOpenChange={setOpenDeleteConfirmationDialog}
+        subject={{ key: "Cart-Item", value: cartItem }}
       />
     </>
   );

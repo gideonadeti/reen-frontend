@@ -1,8 +1,10 @@
 import { Loader } from "lucide-react";
 
 import useProducts from "../products/hooks/use-products";
+import useCartItems from "../hooks/use-cart-items";
 import { Button } from "@/components/ui/button";
 import { Product } from "../products/types/product";
+import { CartItem } from "../types/cart-item";
 import {
   Dialog,
   DialogClose,
@@ -20,8 +22,8 @@ interface DeleteConfirmationDialogProps {
 }
 
 interface Subject {
-  key: "Product";
-  value: Product;
+  key: "Product" | "Cart-Item";
+  value: Product | CartItem;
 }
 
 const DeleteConfirmationDialog = ({
@@ -30,10 +32,18 @@ const DeleteConfirmationDialog = ({
   onOpenChange,
 }: DeleteConfirmationDialogProps) => {
   const { deleteProductMutation } = useProducts();
+  const { deleteCartItemMutation } = useCartItems();
+  const isSubmitting =
+    deleteProductMutation.isPending || deleteCartItemMutation.isPending;
 
   const handleSubmit = () => {
     if (subject.key === "Product") {
       deleteProductMutation.mutate({ id: subject.value.id, onOpenChange });
+    } else if (subject.key === "Cart-Item") {
+      deleteCartItemMutation.mutate({
+        id: subject.value.id,
+        onOpenChange,
+      });
     }
   };
 
@@ -48,16 +58,13 @@ const DeleteConfirmationDialog = ({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose asChild disabled={deleteProductMutation.isPending}>
+          <DialogClose asChild disabled={isSubmitting}>
             <Button type="button" variant="secondary">
               Cancel
             </Button>
           </DialogClose>
-          <Button
-            onClick={() => handleSubmit()}
-            disabled={deleteProductMutation.isPending}
-          >
-            {deleteProductMutation.isPending ? (
+          <Button onClick={() => handleSubmit()} disabled={isSubmitting}>
+            {isSubmitting ? (
               <span className="flex items-center">
                 <Loader className="animate-spin" />
                 <span>Submitting...</span>

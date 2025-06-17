@@ -54,6 +54,18 @@ export const updateCartItem = async (
   }
 };
 
+export const deleteCartItem = async (axios: AxiosInstance, id: string) => {
+  try {
+    const response = await axios.delete(`/cart-items/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error from `deleteCartItem`:", error);
+
+    throw error;
+  }
+};
+
 export const fetchUser = async (axios: AxiosInstance, clerkId: string) => {
   try {
     const response = await axios.get(`auth/users/${clerkId}`);

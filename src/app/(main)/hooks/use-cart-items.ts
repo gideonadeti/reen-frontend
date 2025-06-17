@@ -11,6 +11,7 @@ import { createCartItemFormSchema } from "../products/[productId]/components/cre
 import { Product } from "../products/types/product";
 import {
   createCartItem,
+  deleteCartItem,
   fetchCartItems,
   updateCartItem,
 } from "../utils/query-functions";
@@ -119,6 +120,37 @@ const useCartItems = () => {
     },
   });
 
+  const deleteCartItemMutation = useMutation<
+    CartItem,
+    AxiosError,
+    {
+      id: string;
+      onOpenChange: (open: boolean) => void;
+    }
+  >({
+    mutationFn: async ({ id }) => {
+      const axios = await getAxios();
+
+      return deleteCartItem(axios, id);
+    },
+    onError: (error) => {
+      const description =
+        (error?.response?.data as { message: string })?.message ||
+        "Something went wrong";
+
+      toast.error(description);
+    },
+    onSuccess: (_, { id, onOpenChange }) => {
+      onOpenChange(false);
+
+      toast.success("Cart item deleted successfully");
+
+      queryClient.setQueryData<CartItem[]>(["cart-items"], (oldCartItems) => {
+        return oldCartItems?.filter((cartItem) => cartItem.id !== id);
+      });
+    },
+  });
+
   useEffect(() => {
     if (cartItemsQuery.isError) {
       console.error("Error from `useCartItems`:", cartItemsQuery.error);
@@ -131,6 +163,7 @@ const useCartItems = () => {
     cartItemsQuery,
     createCartItemMutation,
     updateCartItemMutation,
+    deleteCartItemMutation,
   };
 };
 
