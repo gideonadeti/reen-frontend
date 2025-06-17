@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Store } from "lucide-react";
 
 import useUser from "../hooks/use-user";
+import useProducts from "../products/hooks/use-products";
+import useOrders from "../orders/hooks/use-orders";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
 import CreateProductDialog from "./create-product-dialog";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Sidebar,
   SidebarContent,
@@ -20,8 +23,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import useProducts from "../products/hooks/use-products";
 
 interface MenuItem {
   href: string;
@@ -35,14 +36,21 @@ const menuItems: MenuItem[] = [
     icon: <ShoppingBag />,
     label: "Products",
   },
+  {
+    href: "/orders",
+    icon: <Store />,
+    label: "Orders",
+  },
 ];
 
 const AppSidebar = () => {
   const pathname = usePathname();
   const { productsQuery } = useProducts();
-  const products = productsQuery.data || [];
   const { userQuery } = useUser();
+  const { ordersQuery } = useOrders();
   const user = userQuery.data;
+  const products = productsQuery.data || [];
+  const orders = ordersQuery.data || [];
   const [openUpdateUserRoleDialog, setOpenUpdateUserRoleDialog] =
     useState(false);
   const [openCreateProductDialog, setOpenCreateProductDialog] = useState(false);
@@ -69,6 +77,11 @@ const AppSidebar = () => {
                     {item.label === "Products" && (
                       <SidebarMenuBadge>
                         {products.length > 99 ? "99+" : products.length}
+                      </SidebarMenuBadge>
+                    )}
+                    {item.label === "Orders" && (
+                      <SidebarMenuBadge>
+                        {orders.length > 99 ? "99+" : orders.length}
                       </SidebarMenuBadge>
                     )}
                   </SidebarMenuItem>
