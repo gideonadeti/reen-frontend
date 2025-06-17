@@ -46,6 +46,12 @@ const CheckoutDialog = ({ open, onOpenChange }: CheckoutDialogProps) => {
     }
   };
 
+  const copyTestCardNumber = () => {
+    navigator.clipboard.writeText("4242 4242 4242 4242");
+
+    toast.success("Test card number copied to clipboard");
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -64,9 +70,7 @@ const CheckoutDialog = ({ open, onOpenChange }: CheckoutDialogProps) => {
             test card:
             <span
               className="font-semibold text-foreground border px-1 rounded ml-1"
-              onClick={() => {
-                navigator.clipboard.writeText("4242 4242 4242 4242");
-              }}
+              onClick={() => copyTestCardNumber()}
               title="Click to copy test card number"
             >
               4242 4242 4242 4242
