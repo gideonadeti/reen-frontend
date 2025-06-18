@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { CheckCircle, XCircle, ArrowLeft, Home, Mail } from "lucide-react";
 
 import CheckoutDialog from "../components/checkout-dialog";
+import ContactSupportDialog from "../components/contact-support-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,6 +21,8 @@ const Page = () => {
   const success = searchParams.get("success");
   const canceled = searchParams.get("canceled");
   const [openCheckoutDialog, setOpenCheckoutDialog] = useState(false);
+  const [openContactSupportDialog, setOpenContactSupportDialog] =
+    useState(false);
 
   useEffect(() => {
     if (success === "true") {
@@ -191,11 +194,16 @@ const Page = () => {
                   </span>
                 </Button>
               </div>
-              <Button variant="ghost" asChild className="w-full">
-                <Link href="/contact">
+              <Button
+                variant="ghost"
+                asChild
+                className="w-full"
+                onClick={() => setOpenContactSupportDialog(true)}
+              >
+                <span>
                   <Mail className="w-4 h-4 mr-2" />
                   Contact Support
-                </Link>
+                </span>
               </Button>
             </CardContent>
           </Card>
@@ -203,6 +211,10 @@ const Page = () => {
         <CheckoutDialog
           open={openCheckoutDialog}
           onOpenChange={setOpenCheckoutDialog}
+        />
+        <ContactSupportDialog
+          open={openContactSupportDialog}
+          onOpenChange={setOpenContactSupportDialog}
         />
       </>
     );
