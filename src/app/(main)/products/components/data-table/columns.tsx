@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import Header from "@/app/(main)/components/data-table/header";
 import { Product } from "../../types/product";
 import ProductImagesPopover from "@/app/(main)/components/product-images-popover";
+import NameAndQuantity from "../name-and-quantity";
 import formatMoney from "@/app/(main)/utils/format-money";
 import RowActions from "./row-actions";
 import CustomLink from "@/components/ui/custom-link";
@@ -24,8 +25,7 @@ const columns: ColumnDef<Product>[] = [
             productName={product.name}
           />
           <Link href={`/products/${product.id}`} title="View product">
-            <p className="font-medium text-base">{product.name}</p>
-            <p className="text-muted-foreground">Qty:{product.quantity}</p>
+            <NameAndQuantity product={product} />
           </Link>
         </div>
       );
