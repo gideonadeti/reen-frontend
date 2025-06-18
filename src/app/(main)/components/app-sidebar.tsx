@@ -141,7 +141,7 @@ const AppSidebar = () => {
                       variant="outline"
                       onClick={() => setOpenUpdateUserRoleDialog(true)}
                     >
-                      Become {user?.role === "ADMIN" ? "a NADMIN" : "an ADMIN"}
+                      Become {!isNadmin ? "a NADMIN" : "an ADMIN"}
                     </Button>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
