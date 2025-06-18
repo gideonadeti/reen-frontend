@@ -41,6 +41,17 @@ const columns: ColumnDef<Product>[] = [
     },
   },
   {
+    accessorKey: "orderCount",
+    header: ({ column }) => (
+      <Header column={column} title="Number of Purchases" />
+    ),
+    cell: ({ row }) => {
+      const product = row.original as Product;
+
+      return <div className="ps-20">{product.orderCount}</div>;
+    },
+  },
+  {
     accessorKey: "admin.name",
     header: ({ column }) => <Header column={column} title="Admin's Name" />,
     cell: ({ row }) => {

@@ -6,6 +6,7 @@ export interface Product {
   quantity: number;
   imageUrls: string[];
   adminId: string;
+  orderCount: number;
   createdAt: Date;
   updatedAt: Date;
 
