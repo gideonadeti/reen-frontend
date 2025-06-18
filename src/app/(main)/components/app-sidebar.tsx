@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ShoppingBag, Store } from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { ShoppingBag, ShoppingBasket, Store } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
@@ -45,16 +45,19 @@ const menuItems: MenuItem[] = [
 
 const AppSidebar = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { productsQuery } = useProducts();
   const { userQuery } = useUser();
   const { ordersQuery } = useOrders();
   const user = userQuery.data;
   const products = productsQuery.data || [];
+  const myProducts = products.filter((product) => product.adminId === user?.id);
   const orders = ordersQuery.data || [];
+  const isNadmin = user?.role === "NADMIN";
+  const mine = searchParams.get("mine");
   const [openUpdateUserRoleDialog, setOpenUpdateUserRoleDialog] =
     useState(false);
   const [openCreateProductDialog, setOpenCreateProductDialog] = useState(false);
-  const isNadmin = user?.role === "NADMIN";
 
   return (
     <>
@@ -67,7 +70,7 @@ const AppSidebar = () => {
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname === item.href}
+                      isActive={pathname === item.href && mine !== "true"}
                     >
                       <Link href={item.href}>
                         {item.icon}
@@ -86,6 +89,22 @@ const AppSidebar = () => {
                     )}
                   </SidebarMenuItem>
                 ))}
+                {!isNadmin && (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === "/products" && mine === "true"}
+                    >
+                      <Link href="/products?mine=true">
+                        <ShoppingBasket />
+                        <span>My Products</span>
+                      </Link>
+                    </SidebarMenuButton>
+                    <SidebarMenuBadge>
+                      {myProducts.length > 99 ? "99+" : myProducts.length}
+                    </SidebarMenuBadge>
+                  </SidebarMenuItem>
+                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
