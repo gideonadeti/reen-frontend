@@ -1,10 +1,16 @@
+import Loading from "@/app/loading";
 import useUser from "../hooks/use-user";
+import formatMoney from "../utils/format-money";
 
 const Page = () => {
   const { userQuery } = useUser();
   const user = userQuery.data;
 
-  return <div>Balance: {user?.balance}</div>;
+  if (userQuery.isPending) {
+    return <Loading />;
+  }
+
+  return <div>Balance: {formatMoney(user?.balance || 0)}</div>;
 };
 
 export default Page;
