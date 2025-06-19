@@ -1,3 +1,5 @@
+"use client";
+
 import Loading from "@/app/loading";
 import useUser from "../hooks/use-user";
 import formatMoney from "../utils/format-money";
