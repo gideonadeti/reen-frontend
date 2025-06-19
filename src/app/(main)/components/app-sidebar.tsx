@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ShoppingBag, ShoppingBasket, Store } from "lucide-react";
+import { ShoppingBag, ShoppingBasket, Store, User } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
@@ -40,6 +40,11 @@ const menuItems: MenuItem[] = [
     href: "/orders",
     icon: <Store />,
     label: "Orders",
+  },
+  {
+    href: "/profile",
+    icon: <User />,
+    label: "Profile",
   },
 ];
 
