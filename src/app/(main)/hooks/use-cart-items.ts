@@ -66,11 +66,11 @@ const useCartItems = () => {
 
       queryClient.setQueryData<CartItem[]>(["cart-items"], (oldCartItems) => {
         return [
-          ...(oldCartItems || []),
           {
             ...newCartItem,
             product,
           },
+          ...(oldCartItems || []),
         ];
       });
 
