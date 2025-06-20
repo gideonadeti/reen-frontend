@@ -32,6 +32,11 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
+    href: "/profile",
+    icon: <User />,
+    label: "Profile",
+  },
+  {
     href: "/products",
     icon: <ShoppingBag />,
     label: "Products",
@@ -40,11 +45,6 @@ const menuItems: MenuItem[] = [
     href: "/orders",
     icon: <Store />,
     label: "Orders",
-  },
-  {
-    href: "/profile",
-    icon: <User />,
-    label: "Profile",
   },
 ];
 
