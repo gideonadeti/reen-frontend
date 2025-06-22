@@ -75,7 +75,7 @@ const Page = () => {
                 variant="ghost"
                 onClick={() => setOpenCreateCartItemDialog(true)}
                 className="relative bg-blue-600 cursor-pointer rounded-full h-12 font-medium px-3 w-full flex items-center justify-center"
-                disabled={adminIsCurrentUser}
+                disabled={adminIsCurrentUser || product.quantity < 1}
               >
                 <Plus className="absolute left-4 w-4 h-4" />
                 <span>Add To Cart</span>
