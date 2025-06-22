@@ -48,7 +48,7 @@ const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original as Product;
 
-      return <div className="ps-20">{product.orderCount}</div>;
+      return <div className="ps-20">{product.orderCount || 0}</div>;
     },
   },
   {
