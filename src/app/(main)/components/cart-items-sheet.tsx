@@ -1,4 +1,5 @@
 import { Loader, ShoppingCart } from "lucide-react";
+import { useState } from "react";
 
 import useCartItems from "../hooks/use-cart-items";
 import CartItem from "./cart-item";
@@ -6,6 +7,7 @@ import formatMoney from "../utils/format-money";
 import CheckoutDialog from "./checkout-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Muted } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -13,7 +15,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useState } from "react";
 
 interface CartItemsSheetProps {
   open: boolean;
@@ -59,13 +60,14 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
               <Muted className="font-medium">Total:</Muted>
               <span className="font-semibold">{formatMoney(totalCost)}</span>
             </div>
-            <button
+            <Button
+              variant="ghost"
               onClick={() => setOpenCheckoutDialog(true)}
               disabled={cartItemsQuery.isPending || cartItems.length === 0}
-              className="bg-blue-600 rounded-full h-8 font-medium cursor-pointer hover:bg-blue-800"
+              className="bg-blue-600 rounded-full h-8 font-medium cursor-pointer"
             >
               Proceed to checkout
-            </button>
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
