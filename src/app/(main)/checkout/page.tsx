@@ -135,9 +135,9 @@ const Page = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button asChild className="flex-1">
-                <Link href="/">
+                <Link href="/products">
                   <Home className="w-4 h-4 mr-2" />
-                  Return Home
+                  Continue shopping
                 </Link>
               </Button>
               <Button variant="outline" asChild className="flex-1">
