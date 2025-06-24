@@ -1,14 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { isSameDay, isSameMonth, isSameYear } from "date-fns";
 
 import useGetAxios from "./use-get-axios";
 import { fetchUser, updateUserRole } from "../utils/query-functions";
 import { useUser as clerkUseUser } from "@clerk/nextjs";
 import { User, UserRole } from "../types/user";
+import { PeriodType } from "../profile/types/period-type";
 
-const useUser = () => {
+const useUser = (periodDate?: Date, periodType?: PeriodType) => {
   const { user } = clerkUseUser();
   const getAxios = useGetAxios();
   const queryClient = useQueryClient();
@@ -20,6 +22,41 @@ const useUser = () => {
       return fetchUser(axios, user?.id as string);
     },
   });
+
+  const periodBalances = useMemo(() => {
+    if (userQuery.isPending || !periodDate || !periodType) {
+      return [];
+    }
+
+    const user = userQuery.data;
+
+    if (!user) {
+      return [];
+    }
+
+    switch (periodType) {
+      case "day":
+        return user.balances.filter((balance) => {
+          const balanceDate = new Date(balance.createdAt);
+
+          return isSameDay(balanceDate, periodDate);
+        });
+      case "month":
+        return user.balances.filter((balance) => {
+          const balanceDate = new Date(balance.createdAt);
+
+          return isSameMonth(balanceDate, periodDate);
+        });
+      case "year":
+        return user.balances.filter((balance) => {
+          const balanceDate = new Date(balance.createdAt);
+
+          return isSameYear(balanceDate, periodDate);
+        });
+      default:
+        return [];
+    }
+  }, [userQuery.isPending, userQuery.data, periodDate, periodType]);
 
   const updateUserRoleMutation = useMutation<
     User,
@@ -65,6 +102,7 @@ const useUser = () => {
   return {
     userQuery,
     updateUserRoleMutation,
+    periodBalances,
   };
 };
 
