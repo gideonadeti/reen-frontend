@@ -1,13 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 
-import Loading from "@/app/loading";
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
 import formatMoney from "../utils/format-money";
+import Loading from "@/app/loading";
+import PeriodSelector from "./components/period-selector";
+import BalanceTrend from "./components/balance-trend";
+import { PeriodType } from "./types/period-type";
 import { H2 } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
@@ -16,10 +21,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 const Page = () => {
-  const { userQuery } = useUser();
+  const [periodDate, setPeriodDate] = useState(new Date());
+  const [periodType, setPeriodType] = useState<PeriodType>("day");
+  const { userQuery, periodBalances } = useUser(periodDate, periodType);
   const { productsQuery } = useProducts();
   const user = userQuery.data;
   const products = productsQuery.data || [];
@@ -116,6 +122,19 @@ const Page = () => {
             <span className="font-semibold text-2xl">{productsCount || 0}</span>
           </CardContent>
         </Card>
+      </section>
+      <section>
+        <PeriodSelector
+          periodType={periodType}
+          periodDate={periodDate}
+          setPeriodDate={setPeriodDate}
+          setPeriodType={setPeriodType}
+        />
+        <BalanceTrend
+          periodBalances={periodBalances}
+          periodDate={periodDate}
+          periodType={periodType}
+        />
       </section>
     </div>
   );
