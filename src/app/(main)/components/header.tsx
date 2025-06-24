@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import { ShoppingCart } from "lucide-react";
@@ -7,6 +8,8 @@ import { useState } from "react";
 import ThemeChanger from "./theme-changer";
 import CartItemsSheet from "./cart-items-sheet";
 import useCartItems from "../hooks/use-cart-items";
+import ReenLogo from "../../../../public/reen-logo.png";
+import ReenLogoDark from "../../../../public/reen-logo-dark.png";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { H5 } from "@/components/ui/typography";
@@ -14,10 +17,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 const Header = () => {
+  const [openCartItemsSheet, setOpenCartItemsSheet] = useState(false);
   const { theme, systemTheme } = useTheme();
   const { cartItemsQuery } = useCartItems();
   const cartItems = cartItemsQuery.data || [];
-  const [openCartItemsSheet, setOpenCartItemsSheet] = useState(false);
+  const isLightTheme = theme === "light" || systemTheme === "light";
 
   return (
     <>
@@ -25,7 +29,17 @@ const Header = () => {
         <SidebarTrigger />
         <Separator orientation="vertical" className="mx-2 !h-8" />
         <ThemeChanger />
-        <Link href="/products" className="mx-auto">
+        <Link href="/products" className="mx-auto flex items-center gap-1">
+          {isLightTheme ? (
+            <Image src={ReenLogo.src} alt="REEN logo" width={32} height={32} />
+          ) : (
+            <Image
+              src={ReenLogoDark.src}
+              alt="REEN logo"
+              width={32}
+              height={32}
+            />
+          )}
           <H5>REEN</H5>
         </Link>
         <div className="flex items-center">
@@ -33,9 +47,7 @@ const Header = () => {
             appearance={{
               elements: {
                 userButtonOuterIdentifier: `${
-                  theme === "light" || systemTheme === "light"
-                    ? ""
-                    : "!text-white"
+                  isLightTheme ? "" : "!text-white"
                 }`,
               },
             }}
