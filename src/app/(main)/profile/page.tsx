@@ -36,11 +36,13 @@ const Page = () => {
   }
 
   return (
-    <div className="px-4">
-      <span className="text-muted-foreground mb-2">
-        Welcome back, <span className="font-semibold">{user?.name}</span>
-      </span>
-      <H2>Your Profile</H2>
+    <div className="px-4 pb-4 space-y-4">
+      <section>
+        <span className="text-muted-foreground mb-2">
+          Welcome back, <span className="font-semibold">{user?.name}</span>
+        </span>
+        <H2>Your Profile</H2>
+      </section>
       <section
         aria-label="User profile summary"
         className="grid grid-cols-2 gap-4"
@@ -123,7 +125,7 @@ const Page = () => {
           </CardContent>
         </Card>
       </section>
-      <section>
+      <section className="space-y-4">
         <PeriodSelector
           periodType={periodType}
           periodDate={periodDate}
