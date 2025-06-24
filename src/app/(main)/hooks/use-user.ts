@@ -29,6 +29,7 @@ const useUser = (periodDate?: Date, periodType?: PeriodType) => {
     }
 
     const user = userQuery.data;
+    const balances = user?.balances || [];
 
     if (!user) {
       return [];
@@ -36,19 +37,19 @@ const useUser = (periodDate?: Date, periodType?: PeriodType) => {
 
     switch (periodType) {
       case "day":
-        return user.balances.filter((balance) => {
+        return balances.filter((balance) => {
           const balanceDate = new Date(balance.createdAt);
 
           return isSameDay(balanceDate, periodDate);
         });
       case "month":
-        return user.balances.filter((balance) => {
+        return balances.filter((balance) => {
           const balanceDate = new Date(balance.createdAt);
 
           return isSameMonth(balanceDate, periodDate);
         });
       case "year":
-        return user.balances.filter((balance) => {
+        return balances.filter((balance) => {
           const balanceDate = new Date(balance.createdAt);
 
           return isSameYear(balanceDate, periodDate);
