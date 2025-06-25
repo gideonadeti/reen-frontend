@@ -1,7 +1,7 @@
 import ProductsPage from "./pages/products-page";
 
 interface generateMetadataProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export const generateMetadata = async ({
