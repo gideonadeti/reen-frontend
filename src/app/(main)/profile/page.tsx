@@ -6,6 +6,7 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
+import usePeriodBalances from "../hooks/use-period-balances";
 import formatMoney from "../utils/format-money";
 import Loading from "@/app/loading";
 import PeriodSelector from "./components/period-selector";
@@ -25,9 +26,10 @@ import {
 const Page = () => {
   const [periodDate, setPeriodDate] = useState(new Date());
   const [periodType, setPeriodType] = useState<PeriodType>("day");
-  const { userQuery, periodBalances } = useUser(periodDate, periodType);
+  const { userQuery } = useUser();
   const { productsQuery } = useProducts();
   const user = userQuery.data;
+  const periodBalances = usePeriodBalances(user?.id, periodDate, periodType);
   const products = productsQuery.data || [];
   const productsCount = products.filter((p) => p.adminId === user?.id).length;
 
