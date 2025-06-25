@@ -1,37 +1,24 @@
-"use client";
+import ProductsPage from "./pages/products-page";
 
-import { useSearchParams } from "next/navigation";
+interface generateMetadataProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-import useProducts from "./hooks/use-products";
-import useUser from "../hooks/use-user";
-import columns from "./components/data-table/columns";
-import ProductsTable from "./components/data-table/products-table";
-import Loading from "@/app/loading";
-import { H3 } from "@/components/ui/typography";
+export const generateMetadata = async ({
+  searchParams,
+}: generateMetadataProps) => {
+  const { mine } = await searchParams;
+
+  return {
+    title: mine === "true" ? "My Products" : "Products",
+  };
+};
 
 const Page = () => {
-  const { productsQuery } = useProducts();
-  const { userQuery } = useUser();
-  let products = productsQuery.data || [];
-  const user = userQuery.data;
-  const searchParams = useSearchParams();
-  const mine = searchParams.get("mine");
-
-  if (mine === "true") {
-    products = products.filter((product) => product.adminId === user?.id);
-  }
-
-  if (productsQuery.isPending) {
-    return <Loading />;
-  }
-
   return (
-    <div className="p-4 pt-0 space-y-4">
-      <H3>{mine === "true" ? "My " : ""}Products</H3>
-      <div>
-        <ProductsTable columns={columns} data={products} />
-      </div>
-    </div>
+    <>
+      <ProductsPage />
+    </>
   );
 };
 
