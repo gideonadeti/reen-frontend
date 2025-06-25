@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ShoppingBag, ShoppingBasket, Store, User } from "lucide-react";
+import { ShoppingBag, ShoppingBasket, Store, User, Users } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
 import useOrders from "../orders/hooks/use-orders";
+import useUsers from "../users/hooks/use-users";
 import UpdateUserRoleDialog from "./update-user-role-dialog";
 import CreateProductDialog from "./create-product-dialog";
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,11 @@ const menuItems: MenuItem[] = [
     label: "Profile",
   },
   {
+    href: "/users",
+    icon: <Users />,
+    label: "Users",
+  },
+  {
     href: "/products",
     icon: <ShoppingBag />,
     label: "Products",
@@ -59,8 +65,10 @@ const AppSidebar = () => {
   const { productsQuery } = useProducts();
   const { userQuery } = useUser();
   const { ordersQuery } = useOrders();
+  const { usersQuery } = useUsers();
   const user = userQuery.data;
   const products = productsQuery.data || [];
+  const users = usersQuery.data || [];
   const myProducts = products.filter((product) => product.adminId === user?.id);
   const orders = ordersQuery.data || [];
   const isNadmin = user?.role === "NADMIN";
@@ -93,6 +101,11 @@ const AppSidebar = () => {
                         <span>{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
+                    {item.label === "Users" && (
+                      <SidebarMenuBadge>
+                        {users.length > 99 ? "99+" : users.length}
+                      </SidebarMenuBadge>
+                    )}
                     {item.label === "Products" && (
                       <SidebarMenuBadge>
                         {products.length > 99 ? "99+" : products.length}
