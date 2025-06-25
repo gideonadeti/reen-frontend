@@ -86,6 +86,19 @@ const useUser = (periodDate?: Date, periodType?: PeriodType) => {
 
       toast.success("Your role has been updated successfully");
 
+      queryClient.setQueryData<User[]>(["users"], (oldUsers) => {
+        return oldUsers?.map((user) => {
+          if (user.id === updatedUser.id) {
+            return {
+              ...user,
+              ...updatedUser,
+            };
+          }
+
+          return user;
+        });
+      });
+
       queryClient.setQueryData<User>(["users", user?.id], () => {
         return updatedUser;
       });
