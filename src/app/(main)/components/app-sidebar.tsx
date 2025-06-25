@@ -42,6 +42,11 @@ const menuItems: MenuItem[] = [
     label: "Products",
   },
   {
+    href: "/products?mine=true",
+    icon: <ShoppingBasket />,
+    label: "My Products",
+  },
+  {
     href: "/orders",
     icon: <Store />,
     label: "Orders",
@@ -92,24 +97,13 @@ const AppSidebar = () => {
                         {orders.length > 99 ? "99+" : orders.length}
                       </SidebarMenuBadge>
                     )}
+                    {item.label === "My Products" && (
+                      <SidebarMenuBadge>
+                        {myProducts.length > 99 ? "99+" : myProducts.length}
+                      </SidebarMenuBadge>
+                    )}
                   </SidebarMenuItem>
                 ))}
-                {!isNadmin && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/products" && mine === "true"}
-                    >
-                      <Link href="/products?mine=true">
-                        <ShoppingBasket />
-                        <span>My Products</span>
-                      </Link>
-                    </SidebarMenuButton>
-                    <SidebarMenuBadge>
-                      {myProducts.length > 99 ? "99+" : myProducts.length}
-                    </SidebarMenuBadge>
-                  </SidebarMenuItem>
-                )}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
@@ -128,18 +122,16 @@ const AppSidebar = () => {
               </>
             ) : (
               <>
-                {!isNadmin && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Button
-                        variant="outline"
-                        onClick={() => setOpenCreateProductDialog(true)}
-                      >
-                        Create a product
-                      </Button>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )}
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild disabled={isNadmin}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setOpenCreateProductDialog(true)}
+                    >
+                      Create a product
+                    </Button>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <Button
