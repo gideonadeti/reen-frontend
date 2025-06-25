@@ -80,7 +80,13 @@ const AppSidebar = () => {
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname === item.href && mine !== "true"}
+                      isActive={
+                        pathname === "/products"
+                          ? mine === "true"
+                            ? item.label === "My Products"
+                            : item.label === "Products"
+                          : pathname === item.href
+                      }
                     >
                       <Link href={item.href}>
                         {item.icon}
