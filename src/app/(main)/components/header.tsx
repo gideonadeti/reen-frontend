@@ -29,7 +29,7 @@ const Header = () => {
         <SidebarTrigger />
         <Separator orientation="vertical" className="mx-2 !h-8" />
         <ThemeChanger />
-        <Link href="/products" className="mx-auto flex items-center gap-1">
+        <Link href="/profile" className="mx-auto flex items-center gap-1">
           {isLightTheme ? (
             <Image src={ReenLogo.src} alt="REEN logo" width={32} height={32} />
           ) : (
