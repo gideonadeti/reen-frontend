@@ -56,7 +56,7 @@ const Page = () => {
         <Card>
           <CardHeader>
             <CardTitle>Balance</CardTitle>
-            <CardDescription>Amount left in your account</CardDescription>
+            <CardDescription>Amount left in their account</CardDescription>
           </CardHeader>
           <CardContent>
             <span className="font-semibold text-2xl">
@@ -67,7 +67,7 @@ const Page = () => {
         <Card>
           <CardHeader>
             <CardTitle>Sales Count</CardTitle>
-            <CardDescription>Number of sales you have made</CardDescription>
+            <CardDescription>Number of sales they have made</CardDescription>
           </CardHeader>
           <CardContent>
             <span className="font-semibold text-2xl">
@@ -78,7 +78,9 @@ const Page = () => {
         <Card>
           <CardHeader>
             <CardTitle>Amount Spent</CardTitle>
-            <CardDescription>Amount spent on products and fees</CardDescription>
+            <CardDescription>
+              Amount they have spent on products and fees
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-2">
             <span className="font-semibold text-2xl">
@@ -92,7 +94,9 @@ const Page = () => {
         <Card>
           <CardHeader>
             <CardTitle>Purchases Count</CardTitle>
-            <CardDescription>Number of purchases you have made</CardDescription>
+            <CardDescription>
+              Number of purchases they have made
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <span className="font-semibold text-2xl">
@@ -103,7 +107,7 @@ const Page = () => {
         <Card>
           <CardHeader>
             <CardTitle>Amount Gained</CardTitle>
-            <CardDescription>Amount you have made from sales</CardDescription>
+            <CardDescription>Amount they have made from sales</CardDescription>
           </CardHeader>
           <CardContent className="flex items-center gap-2">
             <span className="font-semibold text-2xl">
@@ -123,7 +127,7 @@ const Page = () => {
               </Button>
             </CardAction>
             <CardDescription>
-              Number of products you have created
+              Number of products they have created
             </CardDescription>
           </CardHeader>
           <CardContent>
