@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import useProducts from "../../products/hooks/use-products";
 import useUsers from "../hooks/use-users";
 import usePeriodBalances from "../../hooks/use-period-balances";
+import useUser from "../../hooks/use-user";
 import formatMoney from "../../utils/format-money";
 import Loading from "@/app/loading";
 import PeriodSelector from "../../profile/components/period-selector";
@@ -29,9 +30,12 @@ const Page = () => {
   const [periodType, setPeriodType] = useState<PeriodType>("day");
   const { userId } = useParams();
   const { usersQuery } = useUsers();
+  const { userQuery } = useUser();
   const { productsQuery } = useProducts();
   const users = usersQuery.data || [];
   const user = users.find((user) => user.id === userId);
+  const authUser = userQuery.data;
+  const router = useRouter();
   const periodBalances = usePeriodBalances(
     userId as string,
     periodDate,
@@ -42,6 +46,12 @@ const Page = () => {
 
   if (usersQuery.isPending || productsQuery.isPending) {
     return <Loading />;
+  }
+
+  if (authUser?.id === userId) {
+    router.replace("/profile");
+
+    return null;
   }
 
   return (
