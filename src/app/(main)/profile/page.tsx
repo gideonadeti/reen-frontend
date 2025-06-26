@@ -42,10 +42,11 @@ const Page = () => {
   return (
     <div className="px-4 pb-4 space-y-4">
       <section>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground mb-2">
-            Welcome back, <span className="font-semibold">{user?.name}</span>
-          </span>
+        <span className="text-muted-foreground mb-2">
+          Welcome back, <span className="font-semibold">{user?.name}</span>
+        </span>
+        <div className="flex justify-between items-center">
+          <H2>Your Profile</H2>
           <span>
             {isAdmin ? (
               <Badge className="bg-gradient-to-r from-yellow-400 to-orange-600 font-semibold shadow-md hover:from-yellow-600 hover:to-orange-800 transition-all duration-200">
@@ -57,7 +58,6 @@ const Page = () => {
             )}
           </span>
         </div>
-        <H2>Your Profile</H2>
       </section>
       <section
         aria-label="User profile summary"
