@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Crown } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 import useProducts from "../../products/hooks/use-products";
@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const Page = () => {
   const [periodDate, setPeriodDate] = useState(new Date());
@@ -34,15 +35,16 @@ const Page = () => {
   const { productsQuery } = useProducts();
   const users = usersQuery.data || [];
   const user = users.find((user) => user.id === userId);
+  const isAdmin = user?.role === "ADMIN";
   const authUser = userQuery.data;
   const router = useRouter();
+  const products = productsQuery.data || [];
+  const productsCount = products.filter((p) => p.adminId === userId).length;
   const periodBalances = usePeriodBalances(
     userId as string,
     periodDate,
     periodType
   );
-  const products = productsQuery.data || [];
-  const productsCount = products.filter((p) => p.adminId === userId).length;
 
   if (usersQuery.isPending || productsQuery.isPending || userQuery.isPending) {
     return <Loading />;
@@ -69,7 +71,19 @@ const Page = () => {
   return (
     <div className="px-4 pb-4 space-y-4">
       <section>
-        <H2>{user?.name}&apos;s Profile</H2>
+        <div className="flex justify-between items-center">
+          <H2>{user?.name}&apos;s Profile</H2>
+          <span>
+            {isAdmin ? (
+              <Badge className="bg-gradient-to-r from-yellow-400 to-orange-600 font-semibold shadow-md hover:from-yellow-600 hover:to-orange-800 transition-all duration-200">
+                <Crown className="w-3 h-3" />
+                ADMIN
+              </Badge>
+            ) : (
+              <Badge className=" font-medium">NADMIN</Badge>
+            )}
+          </span>
+        </div>
       </section>
       <section
         aria-label="User profile summary"
