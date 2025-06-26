@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Loader } from "lucide-react";
 
 import useUser from "../hooks/use-user";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,14 +12,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader } from "lucide-react";
+import formatMoney from "../utils/format-money";
 
 interface UpdateUserRoleDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const REQUIRED_PHRASE = "I UNDERSTAND THE RISKS";
+const UPGRADE_COST = 160_000;
 
 const UpdateUserRoleDialog = ({
   open,
@@ -28,14 +27,14 @@ const UpdateUserRoleDialog = ({
 }: UpdateUserRoleDialogProps) => {
   const { userQuery, updateUserRoleMutation } = useUser();
   const user = userQuery.data;
-  const [confirmationText, setConfirmationText] = useState("");
   const isNadmin = user?.role === "NADMIN";
-  const isConfirmed = confirmationText.trim() === REQUIRED_PHRASE;
+  const currentBalance = user?.balance ?? 0;
+  const newBalance = currentBalance - UPGRADE_COST;
+  const hasEnoughBalance = currentBalance >= UPGRADE_COST;
 
   const handleSubmit = () => {
     updateUserRoleMutation.mutate({
       role: isNadmin ? "ADMIN" : "NADMIN",
-      setConfirmationText,
       onOpenChange,
     });
   };
@@ -44,44 +43,65 @@ const UpdateUserRoleDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Become {isNadmin ? "an ADMIN" : "a NADMIN"}</DialogTitle>
+          <DialogTitle>
+            {isNadmin ? "Become an ADMIN" : "Step Down to NADMIN"}
+          </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-4 text-sm text-muted-foreground">
           {isNadmin ? (
             <>
-              <div className="space-y-2 text-sm text-muted-foreground">
+              <p>As an ADMIN, you can:</p>
+              <ul className="list-disc pl-5">
+                <li>Create new products</li>
+                <li>Update existing products</li>
+                <li>Delete your products</li>
+              </ul>
+
+              <p>
+                When you create a product, others can buy it. The more people
+                buy, the more you earn — but you&apos;re responsible for keeping
+                enough quantity available to keep earning.
+              </p>
+
+              <p>
+                <strong>Cost to become ADMIN:</strong>{" "}
+                <span className="text-foreground font-semibold">
+                  {formatMoney(UPGRADE_COST)}
+                </span>
+              </p>
+
+              <div className="text-sm text-foreground border rounded p-3 space-y-1 bg-muted/30">
                 <p>
-                  You are about to request <strong>ADMIN</strong> privileges.
+                  <strong>Your balance: </strong>
+                  {formatMoney(currentBalance)}
                 </p>
-                <p>With great power comes great responsibility.</p>
-
-                <p>As an ADMIN, you will be able to:</p>
-                <ul className="list-disc pl-5">
-                  <li>Create new products</li>
-                  <li>Update your existing products</li>
-                  <li>Delete your products</li>
-                </ul>
-
-                <p className="mt-2">
-                  To proceed, please type{" "}
-                  <span className="font-semibold text-foreground border px-1 rounded">
-                    {REQUIRED_PHRASE}
-                  </span>{" "}
-                  in the input below:
+                <p>
+                  <strong>Remaining after upgrade:</strong>{" "}
+                  {hasEnoughBalance ? (
+                    `${formatMoney(newBalance)}`
+                  ) : (
+                    <span className="text-red-500">Insufficient funds</span>
+                  )}
                 </p>
               </div>
 
-              <Input
-                placeholder="Type the phrase exactly..."
-                value={confirmationText}
-                onChange={(e) => setConfirmationText(e.target.value)}
-              />
+              <p>
+                <strong>Note:</strong> Creating a product costs{" "}
+                <span className="font-semibold">4%</span> of the product price ×
+                quantity.
+              </p>
+              <p>
+                Updating a product costs{" "}
+                <span className="font-semibold">4%</span> of price increase ×
+                quantity increase.
+              </p>
             </>
           ) : (
-            <p className="text-sm text-muted-foreground">
-              You are about to step down from ADMIN privileges and return to
-              NADMIN status.
+            <p>
+              You&apos;re about to step down from ADMIN status and return to
+              NADMIN. You&apos;ll no longer be able to create, update, or delete
+              products.
             </p>
           )}
         </div>
@@ -97,18 +117,21 @@ const UpdateUserRoleDialog = ({
             </Button>
           </DialogClose>
           <Button
-            disabled={
-              (isNadmin && !isConfirmed) || updateUserRoleMutation.isPending
-            }
             onClick={handleSubmit}
+            disabled={
+              updateUserRoleMutation.isPending ||
+              (isNadmin && !hasEnoughBalance)
+            }
           >
             {updateUserRoleMutation.isPending ? (
               <span className="flex items-center">
-                <Loader className="animate-spin" />
-                <span>Submitting...</span>
+                <Loader className="animate-spin mr-2" />
+                Submitting...
               </span>
+            ) : isNadmin ? (
+              "Become ADMIN"
             ) : (
-              "Submit"
+              "Step Down"
             )}
           </Button>
         </DialogFooter>
