@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Crown } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
@@ -22,6 +22,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const Page = () => {
   const [periodDate, setPeriodDate] = useState(new Date());
@@ -32,6 +33,7 @@ const Page = () => {
   const periodBalances = usePeriodBalances(user?.id, periodDate, periodType);
   const products = productsQuery.data || [];
   const productsCount = products.filter((p) => p.adminId === user?.id).length;
+  const isAdmin = user?.role === "ADMIN";
 
   if (userQuery.isPending || productsQuery.isPending) {
     return <Loading />;
@@ -40,9 +42,21 @@ const Page = () => {
   return (
     <div className="px-4 pb-4 space-y-4">
       <section>
-        <span className="text-muted-foreground mb-2">
-          Welcome back, <span className="font-semibold">{user?.name}</span>
-        </span>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground mb-2">
+            Welcome back, <span className="font-semibold">{user?.name}</span>
+          </span>
+          <span>
+            {isAdmin ? (
+              <Badge className="bg-gradient-to-r from-yellow-400 to-orange-600 font-semibold shadow-md hover:from-yellow-600 hover:to-orange-800 transition-all duration-200">
+                <Crown className="w-3 h-3" />
+                ADMIN
+              </Badge>
+            ) : (
+              <Badge className=" font-medium">NADMIN</Badge>
+            )}
+          </span>
+        </div>
         <H2>Your Profile</H2>
       </section>
       <section
