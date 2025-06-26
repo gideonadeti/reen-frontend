@@ -27,7 +27,6 @@ const useUser = () => {
     {
       role: UserRole;
       onOpenChange: (open: boolean) => void;
-      setConfirmationText: (confirmationText: string) => void;
     }
   >({
     mutationFn: async ({ role }) => {
@@ -42,8 +41,7 @@ const useUser = () => {
 
       toast.error(description);
     },
-    onSuccess: (updatedUser, { onOpenChange, setConfirmationText }) => {
-      setConfirmationText("");
+    onSuccess: (updatedUser, { onOpenChange }) => {
       onOpenChange(false);
 
       toast.success("Your role has been updated successfully");
