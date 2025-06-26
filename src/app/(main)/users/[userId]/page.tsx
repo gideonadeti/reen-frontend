@@ -44,7 +44,7 @@ const Page = () => {
   const products = productsQuery.data || [];
   const productsCount = products.filter((p) => p.adminId === userId).length;
 
-  if (usersQuery.isPending || productsQuery.isPending) {
+  if (usersQuery.isPending || productsQuery.isPending || userQuery.isPending) {
     return <Loading />;
   }
 
