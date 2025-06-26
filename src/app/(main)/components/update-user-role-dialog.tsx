@@ -125,13 +125,11 @@ const UpdateUserRoleDialog = ({
           >
             {updateUserRoleMutation.isPending ? (
               <span className="flex items-center">
-                <Loader className="animate-spin mr-2" />
+                <Loader className="animate-spin mr-1" />
                 Submitting...
               </span>
-            ) : isNadmin ? (
-              "Become ADMIN"
             ) : (
-              "Step Down"
+              "Submit"
             )}
           </Button>
         </DialogFooter>
