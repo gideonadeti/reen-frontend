@@ -54,6 +54,18 @@ const Page = () => {
     return null;
   }
 
+  if (!user) {
+    return (
+      <div className="min-h-[80vh] px-4">
+        User with id{" "}
+        <span className="font-semibold text-foreground border px-1 rounded ml-1">
+          {userId}
+        </span>{" "}
+        not found
+      </div>
+    );
+  }
+
   return (
     <div className="px-4 pb-4 space-y-4">
       <section>
