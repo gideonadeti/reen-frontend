@@ -36,7 +36,7 @@ const ProductsPage = () => {
     products = products.filter((product) => product.adminId === adminId);
   }
 
-  if (!user) {
+  if (adminId && !user) {
     toast.error("Invalid adminId");
 
     router.replace("/products");
