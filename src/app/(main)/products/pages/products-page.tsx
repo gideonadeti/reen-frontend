@@ -21,6 +21,7 @@ const ProductsPage = () => {
   const authUser = userQuery.data;
   const searchParams = useSearchParams();
   const adminId = searchParams.get("adminId");
+  const mine = searchParams.get("mine");
   const user = users.find((user) => user.id === adminId);
   const isAuthUser = authUser?.id === adminId;
 
@@ -36,6 +37,10 @@ const ProductsPage = () => {
     products = products.filter((product) => product.adminId === adminId);
   }
 
+  if (mine) {
+    products = products.filter((product) => product.adminId === authUser?.id);
+  }
+
   if (adminId && !user) {
     toast.error("Invalid adminId");
 
@@ -44,7 +49,9 @@ const ProductsPage = () => {
 
   return (
     <div className="p-4 pt-0 space-y-4">
-      <H3>{adminId ? `${user?.name}'s ` : ""}Products</H3>
+      <H3>
+        {adminId ? `${user?.name}'s ` : mine === "true" ? "My " : ""}Products
+      </H3>
       <div>
         <ProductsTable columns={columns} data={products} />
       </div>
