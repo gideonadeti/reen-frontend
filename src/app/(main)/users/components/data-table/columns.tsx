@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { ColumnDef } from "@tanstack/react-table";
 import { Crown } from "lucide-react";
 
 import RowActions from "./row-actions";
 import Header from "@/app/(main)/components/data-table/header";
+import CustomLink from "@/components/ui/custom-link";
 import formatMoney from "@/app/(main)/utils/format-money";
 import formatDate from "@/app/(main)/orders/utils/format-date";
 import { User } from "@/app/(main)/types/user";
@@ -19,9 +19,9 @@ const columns: ColumnDef<User>[] = [
       const user = row.original;
 
       return (
-        <Link href={`/users/${user.id}`} className="hover:underline">
+        <CustomLink href={`/users/${user.id}`} className="hover:underline ps-0">
           {user.name}
-        </Link>
+        </CustomLink>
       );
     },
   },
