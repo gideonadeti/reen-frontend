@@ -10,7 +10,6 @@ export interface User {
   updatedAt: Date;
 
   role: UserRole;
-  balances: Balance[];
 }
 
 export type UserRole = "ADMIN" | "NADMIN";

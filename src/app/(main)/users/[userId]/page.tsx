@@ -1,21 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { TrendingUp, TrendingDown, Crown } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 import useProducts from "../../products/hooks/use-products";
 import useUsers from "../hooks/use-users";
-import usePeriodBalances from "../../hooks/use-period-balances";
 import useUser from "../../hooks/use-user";
 import formatMoney from "../../utils/format-money";
 import Loading from "@/app/loading";
-import PeriodSelector from "../../profile/components/period-selector";
-import BalanceTrend from "../../profile/components/balance-trend";
-import { PeriodType } from "../../profile/types/period-type";
 import { H2 } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -24,11 +20,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 const Page = () => {
-  const [periodDate, setPeriodDate] = useState(new Date());
-  const [periodType, setPeriodType] = useState<PeriodType>("day");
   const { userId } = useParams();
   const { usersQuery } = useUsers();
   const { userQuery } = useUser();
@@ -40,11 +33,6 @@ const Page = () => {
   const router = useRouter();
   const products = productsQuery.data || [];
   const productsCount = products.filter((p) => p.adminId === userId).length;
-  const periodBalances = usePeriodBalances(
-    userId as string,
-    periodDate,
-    periodType
-  );
 
   if (usersQuery.isPending || productsQuery.isPending || userQuery.isPending) {
     return <Loading />;
@@ -170,19 +158,6 @@ const Page = () => {
             <span className="font-semibold text-2xl">{productsCount || 0}</span>
           </CardContent>
         </Card>
-      </section>
-      <section className="space-y-4">
-        <PeriodSelector
-          periodType={periodType}
-          periodDate={periodDate}
-          setPeriodDate={setPeriodDate}
-          setPeriodType={setPeriodType}
-        />
-        <BalanceTrend
-          periodBalances={periodBalances}
-          periodDate={periodDate}
-          periodType={periodType}
-        />
       </section>
     </div>
   );

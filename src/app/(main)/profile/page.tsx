@@ -1,19 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { TrendingUp, TrendingDown, Crown } from "lucide-react";
 
 import useUser from "../hooks/use-user";
 import useProducts from "../products/hooks/use-products";
-import usePeriodBalances from "../hooks/use-period-balances";
 import formatMoney from "../utils/format-money";
 import Loading from "@/app/loading";
-import PeriodSelector from "./components/period-selector";
-import BalanceTrend from "./components/balance-trend";
-import { PeriodType } from "./types/period-type";
 import { H2 } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -22,15 +18,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 const Page = () => {
-  const [periodDate, setPeriodDate] = useState(new Date());
-  const [periodType, setPeriodType] = useState<PeriodType>("day");
   const { userQuery } = useUser();
   const { productsQuery } = useProducts();
   const user = userQuery.data;
-  const periodBalances = usePeriodBalances(user?.id, periodDate, periodType);
   const products = productsQuery.data || [];
   const productsCount = products.filter((p) => p.adminId === user?.id).length;
   const isAdmin = user?.role === "ADMIN";
@@ -140,19 +132,6 @@ const Page = () => {
             <span className="font-semibold text-2xl">{productsCount || 0}</span>
           </CardContent>
         </Card>
-      </section>
-      <section className="space-y-4">
-        <PeriodSelector
-          periodType={periodType}
-          periodDate={periodDate}
-          setPeriodDate={setPeriodDate}
-          setPeriodType={setPeriodType}
-        />
-        <BalanceTrend
-          periodBalances={periodBalances}
-          periodDate={periodDate}
-          periodType={periodType}
-        />
       </section>
     </div>
   );
