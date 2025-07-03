@@ -13,10 +13,3 @@ export interface User {
 }
 
 export type UserRole = "ADMIN" | "NADMIN";
-
-export interface Balance {
-  id: string;
-  amount: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
