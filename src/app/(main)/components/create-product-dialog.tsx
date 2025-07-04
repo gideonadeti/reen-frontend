@@ -122,8 +122,8 @@ const CreateProductDialog = ({
     return (
       watchedValues.name !== product.name ||
       watchedValues.description !== product.description ||
-      watchedValues.price !== product.price ||
-      watchedValues.quantity !== product.quantity ||
+      Number(watchedValues.price) !== Number(product.price) ||
+      Number(watchedValues.quantity) !== Number(product.quantity) ||
       JSON.stringify(watchedValues.imageUrls) !==
         JSON.stringify(product.imageUrls)
     );
