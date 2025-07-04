@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider, SignIn, SignedIn, SignedOut } from "@clerk/nextjs";
 import { ThemeProvider } from "next-themes";
+import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
 
@@ -37,7 +38,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           disableTransitionOnChange
         >
           <ClerkProvider>
-            <SignedIn>{children}</SignedIn>
+            <SignedIn>
+              {children}
+              <Analytics />
+            </SignedIn>
             <SignedOut>
               <div className="h-screen flex items-center justify-center">
                 <SignIn />
