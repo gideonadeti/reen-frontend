@@ -102,16 +102,12 @@ const useProducts = () => {
     {
       formValues: z.infer<typeof createProductFormSchema>;
       fee: number;
-      id?: string;
+      id: string;
       closeCreateProductDialog: () => void;
     }
   >({
     mutationFn: async ({ formValues, id }) => {
       const axios = await getAxios();
-
-      if (!id) {
-        return createProduct(axios, formValues);
-      }
 
       return updateProduct(axios, id, formValues);
     },
