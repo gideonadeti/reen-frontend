@@ -250,6 +250,11 @@ const CreateProductDialog = ({
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  }}
                 >
                   <FormField
                     control={form.control}
