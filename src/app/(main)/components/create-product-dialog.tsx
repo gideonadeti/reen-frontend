@@ -180,11 +180,13 @@ const CreateProductDialog = ({
     if (!product) {
       createProductMutation.mutate({
         formValues: values,
+        fee: createProductFee,
         closeCreateProductDialog,
       });
     } else {
       updateProductMutation.mutate({
         formValues: values,
+        fee: updateProductFee,
         id: product.id,
         closeCreateProductDialog,
       });

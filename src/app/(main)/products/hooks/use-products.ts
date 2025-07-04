@@ -3,9 +3,11 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useEffect } from "react";
 import { z } from "zod";
+import { useUser as clerkUseUser } from "@clerk/nextjs";
 
 import useGetAxios from "../../hooks/use-get-axios";
 import useUser from "../../hooks/use-user";
+import { User } from "../../types/user";
 import { Product } from "../types/product";
 import { createProductFormSchema } from "../../components/create-product-dialog";
 import {
@@ -16,6 +18,7 @@ import {
 } from "../utils/query-functions";
 
 const useProducts = () => {
+  const { user: clerkUser } = clerkUseUser();
   const { userQuery } = useUser();
   const user = userQuery.data;
   const getAxios = useGetAxios();
@@ -34,6 +37,7 @@ const useProducts = () => {
     AxiosError,
     {
       formValues: z.infer<typeof createProductFormSchema>;
+      fee: number;
       closeCreateProductDialog: () => void;
     }
   >({
@@ -49,7 +53,7 @@ const useProducts = () => {
 
       toast.error(description);
     },
-    onSuccess: (newProduct, { closeCreateProductDialog }) => {
+    onSuccess: (newProduct, { closeCreateProductDialog, fee }) => {
       closeCreateProductDialog();
 
       toast.success("Product created successfully");
@@ -66,6 +70,29 @@ const useProducts = () => {
           ...(oldProducts || []),
         ];
       });
+
+      queryClient.setQueryData<User>(["users", clerkUser?.id], (oldUser) => {
+        if (!oldUser) return undefined;
+
+        return {
+          ...oldUser,
+          balance: (oldUser.balance || 0) - fee,
+          amountSpent: (oldUser.amountSpent || 0) + fee,
+        };
+      });
+
+      queryClient.setQueryData<User[]>(["users"], (oldUsers) => {
+        return oldUsers?.map((oldUser) => {
+          if (oldUser.id === user?.id) {
+            return {
+              ...oldUser,
+              balance: (oldUser.balance || 0) - fee,
+              amountSpent: (oldUser.amountSpent || 0) + fee,
+            };
+          }
+          return oldUser;
+        });
+      });
     },
   });
 
@@ -74,6 +101,7 @@ const useProducts = () => {
     AxiosError,
     {
       formValues: z.infer<typeof createProductFormSchema>;
+      fee: number;
       id?: string;
       closeCreateProductDialog: () => void;
     }
@@ -94,7 +122,7 @@ const useProducts = () => {
 
       toast.error(description);
     },
-    onSuccess: (updatedProduct, { closeCreateProductDialog }) => {
+    onSuccess: (updatedProduct, { closeCreateProductDialog, fee }) => {
       closeCreateProductDialog();
 
       toast.success("Product updated successfully");
@@ -108,6 +136,29 @@ const useProducts = () => {
             };
           }
           return product;
+        });
+      });
+
+      queryClient.setQueryData<User>(["users", clerkUser?.id], (oldUser) => {
+        if (!oldUser) return undefined;
+
+        return {
+          ...oldUser,
+          balance: (oldUser.balance || 0) - fee,
+          amountSpent: (oldUser.amountSpent || 0) + fee,
+        };
+      });
+
+      queryClient.setQueryData<User[]>(["users"], (oldUsers) => {
+        return oldUsers?.map((oldUser) => {
+          if (oldUser.id === user?.id) {
+            return {
+              ...oldUser,
+              balance: (oldUser.balance || 0) - fee,
+              amountSpent: (oldUser.amountSpent || 0) + fee,
+            };
+          }
+          return oldUser;
         });
       });
     },
