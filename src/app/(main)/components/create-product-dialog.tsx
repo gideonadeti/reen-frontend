@@ -7,8 +7,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Loader } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 
+import formatMoney from "../utils/format-money";
 import useProducts from "../products/hooks/use-products";
+import useUser from "../hooks/use-user";
 import GeneratedImageUrl from "./generated-image-url";
+import { getCreateProductFee, getUpdateProductFee } from "../utils/fees";
 import { Product } from "../products/types/product";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -75,8 +78,10 @@ const CreateProductDialog = ({
     !!product || false
   );
   const { createProductMutation, updateProductMutation } = useProducts();
+  const { userQuery } = useUser();
+  const user = userQuery.data;
+  const currentBalance = user?.balance ?? 0;
   const submitButtonRef = useRef<HTMLButtonElement>(null);
-
   const form = useForm<z.infer<typeof createProductFormSchema>>({
     resolver: zodResolver(createProductFormSchema),
     defaultValues: {
@@ -90,6 +95,25 @@ const CreateProductDialog = ({
 
   // Watch all form values for changes
   const watchedValues = form.watch();
+  const createProductFee = getCreateProductFee(
+    watchedValues.price,
+    watchedValues.quantity
+  );
+
+  const updateProductFee = product
+    ? getUpdateProductFee(
+        product.price,
+        product.quantity,
+        watchedValues.price,
+        watchedValues.quantity
+      )
+    : 0;
+
+  const newBalance =
+    currentBalance - (product ? updateProductFee : createProductFee);
+
+  const hasEnoughBalance =
+    currentBalance >= (product ? updateProductFee : createProductFee);
 
   // Memoized change detection
   const isUpdated = useMemo(() => {
@@ -174,7 +198,7 @@ const CreateProductDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="h-[96vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>{product ? "Update" : "Create"} a Product</DialogTitle>
           <DialogDescription>
@@ -184,150 +208,207 @@ const CreateProductDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Dell Latitude 1234" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="16GB RAM, 512GB ROM(SSD), Intel Core i7..."
-                      className="resize-none h-24"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price ($)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={2000}
-                        placeholder="400"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="quantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Quantity</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        min={1}
-                        max={2000}
-                        placeholder="10"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        {/* Fee Information - Always visible */}
+        <div className="space-y-2 border-b pb-2">
+          {product ? (
+            <div>
+              <strong>Update product fee:</strong>{" "}
+              <span className="font-semibold">
+                {formatMoney(updateProductFee)}
+              </span>
             </div>
+          ) : (
+            <div>
+              <strong>Create product fee:</strong>{" "}
+              <span className="font-semibold">
+                {formatMoney(createProductFee)}
+              </span>
+            </div>
+          )}
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Generate:</span>
-                  <Select
-                    value={generateCount.toString()}
-                    onValueChange={(value) => setGenerateCount(Number(value))}
-                  >
-                    <SelectTrigger className="w-16" size="sm">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Array.from({ length: 6 }, (_, i) => (
-                        <SelectItem key={i + 1} value={(i + 1).toString()}>
-                          {i + 1}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <span className="text-sm">
-                    image{generateCount > 1 ? " URLs" : " URL"}
-                  </span>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => generateImageUrls(generateCount)}
+          <div className="text-sm border rounded p-3 space-y-1 bg-muted/30">
+            <p>
+              <strong>Your balance: </strong>
+              {formatMoney(currentBalance)}
+            </p>
+            <p>
+              <strong>Remaining after upgrade:</strong>{" "}
+              {hasEnoughBalance ? (
+                `${formatMoney(newBalance)}`
+              ) : (
+                <span className="text-red-500">Insufficient funds</span>
+              )}
+            </p>
+          </div>
+        </div>
+
+        {/* Form - Scrollable */}
+        <div className="flex-1 min-h-0">
+          <ScrollArea className="h-full">
+            <div className="pl-1 pr-4">
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
                 >
-                  Generate
-                </Button>
-              </div>
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Dell Latitude 1234" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              <FormField
-                control={form.control}
-                name="imageUrls"
-                render={() => (
-                  <FormItem>
-                    <FormLabel>
-                      Image URLs ({generatedImageUrls.length}/6)
-                    </FormLabel>
-                    <FormControl>
-                      {generatedImageUrls.length > 0 ? (
-                        <ScrollArea className="h-32 border rounded-md">
-                          <div className="flex flex-col gap-2 p-3">
-                            {generatedImageUrls.map((imageUrl) => (
-                              <GeneratedImageUrl
-                                key={imageUrl}
-                                generatedImageUrl={imageUrl}
-                                setGeneratedImageUrls={setGeneratedImageUrls}
-                              />
-                            ))}
-                          </div>
-                        </ScrollArea>
-                      ) : (
-                        <div className="h-24 border rounded-md flex items-center justify-center text-muted-foreground">
-                          <p className="text-sm">No images generated yet</p>
-                        </div>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="16GB RAM, 512GB ROM(SSD), Intel Core i7..."
+                            className="resize-none h-20"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Price ($)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min={1}
+                              max={2000}
+                              placeholder="400"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                    />
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Quantity</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min={1}
+                              max={2000}
+                              placeholder="10"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-            <button type="submit" className="hidden" ref={submitButtonRef} />
-          </form>
-        </Form>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium">Generate:</span>
+                        <Select
+                          value={generateCount.toString()}
+                          onValueChange={(value) =>
+                            setGenerateCount(Number(value))
+                          }
+                        >
+                          <SelectTrigger className="w-16" size="sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 6 }, (_, i) => (
+                              <SelectItem
+                                key={i + 1}
+                                value={(i + 1).toString()}
+                              >
+                                {i + 1}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <span className="text-sm">
+                          image{generateCount > 1 ? " URLs" : " URL"}
+                        </span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => generateImageUrls(generateCount)}
+                      >
+                        Generate
+                      </Button>
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="imageUrls"
+                      render={() => (
+                        <FormItem>
+                          <FormLabel>
+                            Image URLs ({generatedImageUrls.length}/6)
+                          </FormLabel>
+                          <FormControl>
+                            {generatedImageUrls.length > 0 ? (
+                              <ScrollArea className="h-32 border rounded-md">
+                                <div className="p-2 space-y-2">
+                                  {generatedImageUrls.map((imageUrl) => (
+                                    <GeneratedImageUrl
+                                      key={imageUrl}
+                                      generatedImageUrl={imageUrl}
+                                      setGeneratedImageUrls={
+                                        setGeneratedImageUrls
+                                      }
+                                    />
+                                  ))}
+                                </div>
+                              </ScrollArea>
+                            ) : (
+                              <div className="h-20 border rounded-md flex items-center justify-center text-muted-foreground">
+                                <p className="text-sm">
+                                  No images generated yet
+                                </p>
+                              </div>
+                            )}
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="hidden"
+                    ref={submitButtonRef}
+                  />
+                </form>
+              </Form>
+            </div>
+          </ScrollArea>
+        </div>
 
         <DialogFooter>
           <Button
