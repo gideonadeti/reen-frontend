@@ -232,7 +232,7 @@ const CreateProductDialog = ({
               {formatMoney(currentBalance)}
             </p>
             <p>
-              <strong>Remaining after upgrade:</strong>{" "}
+              <strong>Remaining after {product ? "update" : "create"}:</strong>{" "}
               {hasEnoughBalance ? (
                 `${formatMoney(newBalance)}`
               ) : (
