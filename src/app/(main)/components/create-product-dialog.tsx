@@ -1,22 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
-import { Eye, Loader, X } from "lucide-react";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-} from "react";
+import { Loader } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 
 import useProducts from "../products/hooks/use-products";
+import GeneratedImageUrl from "./generated-image-url";
 import { Product } from "../products/types/product";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -360,83 +352,6 @@ const CreateProductDialog = ({
             )}
           </Button>
         </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-interface GeneratedImageUrlProps {
-  generatedImageUrl: string;
-  setGeneratedImageUrls: Dispatch<SetStateAction<string[]>>;
-}
-
-const GeneratedImageUrl = ({
-  generatedImageUrl,
-  setGeneratedImageUrls,
-}: GeneratedImageUrlProps) => {
-  const [openPreviewDialog, setOpenPreviewDialog] = useState(false);
-
-  const removeGeneratedImageUrl = useCallback(() => {
-    setGeneratedImageUrls((prev) =>
-      prev.filter((imageUrl) => imageUrl !== generatedImageUrl)
-    );
-  }, [generatedImageUrl, setGeneratedImageUrls]);
-
-  return (
-    <>
-      <div className="flex items-center gap-2">
-        <Input readOnly value={generatedImageUrl} className="flex-1 text-xs" />
-        <div className="flex gap-1">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => setOpenPreviewDialog(true)}
-          >
-            <Eye />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={removeGeneratedImageUrl}
-          >
-            <X />
-          </Button>
-        </div>
-      </div>
-
-      <PreviewImageUrlDialog
-        open={openPreviewDialog}
-        onOpenChange={setOpenPreviewDialog}
-        imageUrl={generatedImageUrl}
-      />
-    </>
-  );
-};
-
-interface PreviewImageUrlDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  imageUrl: string;
-}
-
-const PreviewImageUrlDialog = ({
-  open,
-  onOpenChange,
-  imageUrl,
-}: PreviewImageUrlDialogProps) => {
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-1/4 h-1/2">
-        <div>
-          <Image
-            src={imageUrl}
-            alt="Generated image preview"
-            fill
-            className="object-cover"
-          />
-        </div>
       </DialogContent>
     </Dialog>
   );
