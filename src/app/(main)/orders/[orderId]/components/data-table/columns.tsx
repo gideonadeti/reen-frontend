@@ -57,7 +57,7 @@ const columns: ColumnDef<OrderItem>[] = [
       const costPerItem = orderItem.price / orderItem.quantity;
 
       return (
-        <div className="ps-6">
+        <div className="ps-4">
           <span>{formatMoney(orderItem.price)}</span>
           <Muted className="text-xs">{formatMoney(costPerItem)} each</Muted>
         </div>
