@@ -195,6 +195,7 @@ const CreateProductDialog = ({
 
   const isSubmitting =
     createProductMutation.isPending || updateProductMutation.isPending;
+
   const isSubmitDisabled =
     !form.formState.isValid || isSubmitting || (product && !isUpdated);
 
