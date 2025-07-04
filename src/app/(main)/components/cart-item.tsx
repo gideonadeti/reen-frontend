@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Minus, Plus, X } from "lucide-react";
+import { X, Pencil } from "lucide-react";
 import { useState } from "react";
 
 import formatMoney from "../utils/format-money";
@@ -36,26 +36,23 @@ const CartItem = ({ cartItem }: { cartItem: CartItemType }) => {
             </div>
           </div>
           <div className="flex flex-col justify-between items-end">
-            <span className="font-medium">
-              {formatMoney(cartItem.product.price * cartItem.quantity)}
-            </span>
-            <div className="border rounded-full flex items-center gap-2 px-2 py-1">
+            <div className="flex flex-col items-end mb-0.5">
+              <span className="font-medium">
+                {formatMoney(cartItem.product.price * cartItem.quantity)}
+              </span>
+              <span className="text-xs text-muted-foreground -mt-1">
+                {formatMoney(cartItem.product.price)} each
+              </span>
+            </div>
+            <div className="border rounded-full flex items-center gap-2 pl-2 pr-1 py-0.5">
+              <span className="text-sm">{cartItem.quantity}</span>
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-muted-foreground rounded-full w-6 h-6"
                 onClick={() => setOpenCreateCartItemDialog(true)}
               >
-                <Plus />
-              </Button>
-              <p>{cartItem.quantity}</p>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground p-0 rounded-full w-6 h-6"
-                onClick={() => setOpenCreateCartItemDialog(true)}
-              >
-                <Minus />
+                <Pencil />
               </Button>
             </div>
           </div>
