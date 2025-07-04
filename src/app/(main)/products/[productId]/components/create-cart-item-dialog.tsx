@@ -67,6 +67,14 @@ const CreateCartItemDialog = ({
     },
   });
 
+  const watchedValues = form.watch();
+
+  const isUpdated =
+    Number(cartItem?.quantity) !== Number(watchedValues.quantity);
+
+  const isSubmitDisabled =
+    isSubmitting || !form.formState.isValid || (cartItem && !isUpdated);
+
   // Reset form when cart item changes or dialog opens
   useEffect(() => {
     if (open) {
@@ -149,7 +157,7 @@ const CreateCartItemDialog = ({
               Cancel
             </Button>
             <Button
-              disabled={isSubmitting || !form.formState.isValid}
+              disabled={isSubmitDisabled}
               onClick={() => submitButtonRef.current?.click()}
             >
               {isSubmitting ? (
