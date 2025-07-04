@@ -2,13 +2,17 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
 const Page = () => {
   const router = useRouter();
+  const { user } = useUser();
 
   useEffect(() => {
-    router.push("/profile");
-  }, [router]);
+    if (user) {
+      router.push("/profile");
+    }
+  }, [router, user]);
 
   return null;
 };
