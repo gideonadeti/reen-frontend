@@ -17,7 +17,12 @@ const ProductsPage = () => {
   const { usersQuery } = useUsers();
   const router = useRouter();
   const users = usersQuery.data || [];
+  const anonymousUser = users.find((user) => user.role === "ANONYMOUS");
   let products = productsQuery.data || [];
+  products = products.filter(
+    (product) => product.adminId !== anonymousUser?.id
+  ); // Filter out products of anonymous user
+
   const authUser = userQuery.data;
   const searchParams = useSearchParams();
   const adminId = searchParams.get("adminId");
