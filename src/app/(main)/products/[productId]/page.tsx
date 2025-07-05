@@ -6,12 +6,13 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useState } from "react";
 
+import formatMoney from "../../utils/format-money";
+import useProducts from "../hooks/use-products";
+import useUsers from "../../users/hooks/use-users";
+import useUser from "../../hooks/use-user";
+import Loading from "@/app/loading";
 import ProductImagesCarousel from "./components/product-images-carousel";
 import CreateCartItemDialog from "./components/create-cart-item-dialog";
-import useProducts from "../hooks/use-products";
-import Loading from "@/app/loading";
-import useUser from "../../hooks/use-user";
-import formatMoney from "../../utils/format-money";
 import { Product } from "../types/product";
 import { H1, H3, Muted } from "@/components/ui/typography";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -21,8 +22,12 @@ const Page = () => {
   const { productId } = useParams();
   const { productsQuery } = useProducts();
   const { userQuery } = useUser();
+  const { usersQuery } = useUsers();
+  const users = usersQuery.data || [];
+  const anonymousUser = users.find((user) => user.role === "ANONYMOUS");
   const [openCreateCartItemDialog, setOpenCreateCartItemDialog] =
     useState(false);
+
   const router = useRouter();
   const user = userQuery.data;
   const product = productsQuery.data?.find((p) => p.id === productId);
@@ -30,10 +35,12 @@ const Page = () => {
   const adminProducts = productsQuery.data?.filter(
     (p) => p.adminId === productAdminId
   );
+
   const otherProducts = adminProducts?.filter((p) => p.id !== productId) || [];
   const adminIsCurrentUser = user?.id === productAdminId;
+  const adminIsAnonymousUser = productAdminId === anonymousUser?.id;
 
-  if (productsQuery.isPending || userQuery.isPending) {
+  if (productsQuery.isPending || userQuery.isPending || usersQuery.isPending) {
     return <Loading />;
   }
 
@@ -75,7 +82,11 @@ const Page = () => {
                 variant="ghost"
                 onClick={() => setOpenCreateCartItemDialog(true)}
                 className="relative bg-blue-600 cursor-pointer rounded-full h-12 font-medium px-3 w-full flex items-center justify-center"
-                disabled={adminIsCurrentUser || product.quantity < 1}
+                disabled={
+                  adminIsCurrentUser ||
+                  product.quantity < 1 ||
+                  adminIsAnonymousUser
+                }
               >
                 <Plus className="absolute left-4 w-4 h-4" />
                 <span>Add To Cart</span>
