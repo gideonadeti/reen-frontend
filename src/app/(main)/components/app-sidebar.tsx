@@ -69,8 +69,8 @@ const AppSidebar = () => {
   const user = userQuery.data;
   let products = productsQuery.data || [];
   let users = usersQuery.data || [];
-  users = users.filter((user) => user.role !== "ANONYMOUS"); // Filter out anonymous user
   const anonymousUser = users.find((user) => user.role === "ANONYMOUS");
+  users = users.filter((user) => user.role !== "ANONYMOUS"); // Filter out anonymous user
   products = products.filter(
     (product) => product.adminId !== anonymousUser?.id
   ); // Filter out products from anonymous user
