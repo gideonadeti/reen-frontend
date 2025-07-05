@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Plus } from "lucide-react";
+import { ArrowLeft, BadgeX, Plus } from "lucide-react";
 import { useState } from "react";
 
 import formatMoney from "../../utils/format-money";
@@ -17,6 +17,7 @@ import { Product } from "../types/product";
 import { H1, H3, Muted } from "@/components/ui/typography";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const Page = () => {
   const { productId } = useParams();
@@ -77,7 +78,7 @@ const Page = () => {
               <Muted className="text-sm">{product.description}</Muted>
             </div>
 
-            <div className="mt-auto">
+            <div className="mt-auto space-y-2">
               <Button
                 variant="ghost"
                 onClick={() => setOpenCreateCartItemDialog(true)}
@@ -91,6 +92,15 @@ const Page = () => {
                 <Plus className="absolute left-4 w-4 h-4" />
                 <span>Add To Cart</span>
               </Button>
+              {adminIsAnonymousUser && (
+                <Alert variant="destructive">
+                  <BadgeX />
+                  <AlertTitle>
+                    You cannot add this product to your cart because it has been
+                    deleted by the main admin.
+                  </AlertTitle>
+                </Alert>
+              )}
             </div>
           </div>
         </div>
