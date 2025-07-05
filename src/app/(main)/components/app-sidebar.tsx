@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ShoppingBag, ShoppingBasket, Store, User, Users } from "lucide-react";
 
@@ -23,7 +24,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
 
 interface MenuItem {
   href: string;
@@ -67,8 +67,13 @@ const AppSidebar = () => {
   const { ordersQuery } = useOrders();
   const { usersQuery } = useUsers();
   const user = userQuery.data;
-  const products = productsQuery.data || [];
-  const users = usersQuery.data || [];
+  let products = productsQuery.data || [];
+  let users = usersQuery.data || [];
+  users = users.filter((user) => user.role !== "ANONYMOUS"); // Filter out anonymous user
+  const anonymousUser = users.find((user) => user.role === "ANONYMOUS");
+  products = products.filter(
+    (product) => product.adminId !== anonymousUser?.id
+  ); // Filter out products from anonymous user
   const myProducts = products.filter((product) => product.adminId === user?.id);
   const orders = ordersQuery.data || [];
   const isNadmin = user?.role === "NADMIN";
