@@ -12,4 +12,4 @@ export interface User {
   role: UserRole;
 }
 
-export type UserRole = "ADMIN" | "NADMIN";
+export type UserRole = "ADMIN" | "NADMIN" | "ANONYMOUS";
