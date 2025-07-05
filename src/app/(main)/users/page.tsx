@@ -8,7 +8,8 @@ import { H3 } from "@/components/ui/typography";
 
 const Page = () => {
   const { usersQuery } = useUsers();
-  const users = usersQuery.data || [];
+  let users = usersQuery.data || [];
+  users = users.filter((user) => user.role !== "ANONYMOUS"); // Filter out anonymous user
 
   if (usersQuery.isPending) {
     return <Loading />;
