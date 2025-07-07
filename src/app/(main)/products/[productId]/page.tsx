@@ -17,7 +17,7 @@ import { Product } from "../types/product";
 import { H1, H3, Muted } from "@/components/ui/typography";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Page = () => {
   const { productId } = useParams();
@@ -99,10 +99,17 @@ const Page = () => {
               {adminIsAnonymousUser && (
                 <Alert variant="destructive">
                   <BadgeX />
-                  <AlertTitle>
-                    You cannot add this product to your cart because it has been
-                    deleted by the main admin.
-                  </AlertTitle>
+                  <AlertTitle>Product Deleted</AlertTitle>
+                  <AlertDescription>
+                    <p>
+                      You cannot add this product to your cart because it has
+                      been deleted by the main admin.
+                    </p>
+                    <p>
+                      It&apos;s still shown here because it&apos;s linked to
+                      your one or more of your order items.
+                    </p>
+                  </AlertDescription>
                 </Alert>
               )}
             </div>
