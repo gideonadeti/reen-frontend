@@ -28,6 +28,10 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
     (total, item) => total + item.product.price * item.quantity,
     0
   );
+
+  const maxCost = 999999.99; // $999,999.99
+  const hasExceededMaxCost = totalCost > maxCost;
+
   const [openCheckoutDialog, setOpenCheckoutDialog] = useState(false);
 
   return (
@@ -63,7 +67,11 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
             <Button
               variant="ghost"
               onClick={() => setOpenCheckoutDialog(true)}
-              disabled={cartItemsQuery.isPending || cartItems.length === 0}
+              disabled={
+                cartItemsQuery.isPending ||
+                cartItems.length === 0 ||
+                hasExceededMaxCost
+              }
               className="bg-blue-600 rounded-full h-8 font-medium cursor-pointer"
             >
               Proceed to checkout
