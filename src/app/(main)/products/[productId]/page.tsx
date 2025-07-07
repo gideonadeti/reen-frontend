@@ -112,6 +112,18 @@ const Page = () => {
                   </AlertDescription>
                 </Alert>
               )}
+              {adminIsCurrentUser && (
+                <Alert>
+                  <BadgeX />
+                  <AlertTitle>You&apos;re the admin</AlertTitle>
+                  <AlertDescription>
+                    <p>
+                      You cannot add your own product to your cart. If you want
+                      to purchase it, please log in with a different account.
+                    </p>
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
           </div>
         </div>
