@@ -21,6 +21,16 @@ const Page = () => {
     return <Loading />;
   }
 
+  if (!order) {
+    return (
+      <div className="p-4 pt-0 h-full flex items-center justify-center">
+        <H3>
+          Order with id {orderId} not found{}
+        </H3>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 pt-0 space-y-4">
       <Button
