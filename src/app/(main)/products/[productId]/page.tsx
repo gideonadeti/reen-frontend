@@ -37,9 +37,13 @@ const Page = () => {
     (p) => p.adminId === productAdminId
   );
 
-  const otherProducts = adminProducts?.filter((p) => p.id !== productId) || [];
   const adminIsCurrentUser = user?.id === productAdminId;
   const adminIsAnonymousUser = productAdminId === anonymousUser?.id;
+
+  // If admin is anonymous user, we don't show other products
+  const otherProducts = adminIsAnonymousUser
+    ? []
+    : adminProducts?.filter((p) => p.id !== productId) || [];
 
   if (productsQuery.isPending || userQuery.isPending || usersQuery.isPending) {
     return <Loading />;
