@@ -1,4 +1,4 @@
-import { Loader, ShoppingCart } from "lucide-react";
+import { Loader, ShoppingCart, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 
 import useCartItems from "../hooks/use-cart-items";
@@ -8,6 +8,7 @@ import CheckoutDialog from "./checkout-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Muted } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Sheet,
   SheetContent,
@@ -31,7 +32,6 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
 
   const maxCost = 999999.99; // $999,999.99
   const hasExceededMaxCost = totalCost > maxCost;
-
   const [openCheckoutDialog, setOpenCheckoutDialog] = useState(false);
 
   return (
@@ -43,6 +43,25 @@ const CartItemsSheet = ({ open, onOpenChange }: CartItemsSheetProps) => {
           </SheetHeader>
           <ScrollArea className="h-[76%]">
             <div className="flex-1 px-4 py-2 space-y-4 divide-y">
+              {hasExceededMaxCost && (
+                <Alert variant="destructive">
+                  <TriangleAlert />
+                  <AlertTitle>Maximum cost exceeded</AlertTitle>
+                  <AlertDescription>
+                    <p>
+                      You have exceeded the maximum cost of{" "}
+                      {formatMoney(maxCost)}.
+                    </p>
+                    <p>You can fix this by:</p>
+                    <ul className="list-inside list-disc text-sm">
+                      <li>
+                        Updating the quantity of one or more of your cart items
+                      </li>
+                      <li>Removing one or more of your cart items</li>
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              )}
               {cartItemsQuery.isPending ? (
                 <div className="h-4/5 flex items-center justify-center">
                   <Loader className="animate-spin" />
