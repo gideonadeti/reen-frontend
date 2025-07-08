@@ -1,4 +1,4 @@
-import { Loader } from "lucide-react";
+import { Loader, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
@@ -58,34 +58,38 @@ const CheckoutDialog = ({ open, onOpenChange }: CheckoutDialogProps) => {
         <DialogHeader>
           <DialogTitle>Checkout</DialogTitle>
           <DialogDescription>
-            Read the instructions below and proceed with the checkout process
-            when ready.
+            Complete your purchase using the test card details below
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <p>
-            When you click submit, you&apos;ll be redirected to a Stripe-powered
-            page to complete payment. Since this is a portfolio project, use the
-            test card:
-            <span
-              className="font-semibold text-foreground border px-1 rounded ml-1"
-              onClick={() => copyTestCardNumber()}
-              title="Click to copy test card number"
+        <div className="space-y-4 py-2">
+          <div className="bg-muted/30 rounded p-3">
+            <p className="text-sm mb-2">
+              <strong>Test Card:</strong>
+            </p>
+            <button
+              onClick={copyTestCardNumber}
+              className="font-mono bg-background border rounded px-2 py-1 text-sm hover:bg-accent flex items-center gap-2"
             >
               4242 4242 4242 4242
-            </span>
-            . Use any future expiry and any 3-digit CVC.
-          </p>
-          <p>
-            After payment, you&apos;ll return to a success page. The cart will
-            be cleared, the product quantity updated, and an order created. This
-            may take a few seconds.
-          </p>
-          <p>
-            An email will also be sent confirming the delivery is on its way.
-            And...that&apos;s it 😊.
-          </p>
+              <Copy className="h-3 w-3" />
+            </button>
+            <p className="text-xs text-muted-foreground mt-1">
+              Use any future expiry and any 3-digit CVC
+            </p>
+          </div>
+
+          <div className="text-sm space-y-2 text-muted-foreground">
+            <p>
+              When you click &quot;Submit&quot;, you&apos;ll be redirected to a
+              Stripe page to complete payment.
+            </p>
+            <p>
+              After payment, you&apos;ll return here and your order will be
+              processed.
+            </p>
+            <p>A confirmation email will be sent to you.</p>
+          </div>
         </div>
 
         <DialogFooter>
