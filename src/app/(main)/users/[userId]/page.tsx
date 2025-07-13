@@ -153,7 +153,7 @@ const Page = () => {
             <CardTitle>Products Count</CardTitle>
             <CardAction>
               <Button variant="link" asChild>
-                <Link href="/products?mine=true">See all</Link>
+                <Link href={`/products?adminId=${userId}`}>See all</Link>
               </Button>
             </CardAction>
             <CardDescription>
