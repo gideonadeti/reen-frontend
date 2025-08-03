@@ -155,7 +155,9 @@ const useCartItems = () => {
     if (cartItemsQuery.isError) {
       console.error("Error from `useCartItems`:", cartItemsQuery.error);
 
-      toast.error("Failed to fetch cart items");
+      toast.error("Failed to fetch cart items", {
+        id: "fetch-cart-items-error",
+      });
     }
   }, [cartItemsQuery.isError, cartItemsQuery.error]);
 

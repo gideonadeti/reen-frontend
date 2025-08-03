@@ -20,7 +20,9 @@ const useUsers = () => {
 
   useEffect(() => {
     if (usersQuery.isError) {
-      toast.error(`Failed to fetch users`);
+      toast.error("Failed to fetch users", {
+        id: "fetch-users-error",
+      });
     }
   }, [usersQuery.isError]);
 

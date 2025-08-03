@@ -22,7 +22,9 @@ const useOrders = () => {
     if (ordersQuery.isError) {
       console.error("Error from `useOrders`:", ordersQuery.error);
 
-      toast.error(`Failed to fetch orders`);
+      toast.error("Failed to fetch orders", {
+        id: "fetch-orders-error",
+      });
     }
   }, [ordersQuery.isError, ordersQuery.error]);
 

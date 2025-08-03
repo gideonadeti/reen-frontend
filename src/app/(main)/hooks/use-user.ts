@@ -69,7 +69,9 @@ const useUser = () => {
     if (userQuery.isError) {
       console.error("Error from `useUser`:", userQuery.error);
 
-      toast.error(`Failed to fetch user`);
+      toast.error("Failed to fetch user", {
+        id: "fetch-user-error",
+      });
     }
   }, [userQuery.isError, userQuery.error, user?.id]);
 

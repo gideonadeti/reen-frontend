@@ -195,7 +195,9 @@ const useProducts = () => {
     if (productsQuery.isError) {
       console.error("Error from `useProducts`:", productsQuery.error);
 
-      toast.error("Failed to fetch products");
+      toast.error("Failed to fetch products", {
+        id: "fetch-products-error",
+      });
     }
   }, [productsQuery.isError, productsQuery.error]);
 
