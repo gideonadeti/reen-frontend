@@ -37,7 +37,7 @@ const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const product = row.original as Product;
 
-      return <div className="ps-4">{formatMoney(product.price)}</div>;
+      return <div>{formatMoney(product.price)}</div>;
     },
   },
   {
