@@ -82,7 +82,7 @@ const Page = () => {
               <Muted className="text-sm">{product.description}</Muted>
             </div>
 
-            <div className="mt-auto space-y-2">
+            <div className="pt-4 mt-auto space-y-2">
               <Button
                 variant="ghost"
                 onClick={() => setOpenCreateCartItemDialog(true)}
