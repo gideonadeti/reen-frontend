@@ -13,7 +13,7 @@ const NameAndQuantity = ({ product }: NameAndQuantityProps) => {
 
   return (
     <div className="flex flex-col">
-      <span className="font-medium text-base max-w-lg truncate">
+      <span className="font-medium text-base max-w-md truncate">
         {product.name}
       </span>
       <span className="text-muted-foreground">
