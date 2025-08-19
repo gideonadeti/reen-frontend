@@ -12,7 +12,7 @@ import { Muted } from "@/components/ui/typography";
 const columns: ColumnDef<OrderItem>[] = [
   {
     accessorKey: "product.name",
-    header: ({ column }) => <Header column={column} title="Product's Name" />,
+    header: ({ column }) => <Header column={column} title="Product Name" />,
     cell: ({ row }) => {
       const orderItem = row.original as OrderItem;
 
