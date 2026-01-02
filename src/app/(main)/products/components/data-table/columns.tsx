@@ -53,7 +53,7 @@ const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "admin.name",
-    header: ({ column }) => <Header column={column} title="Admin's Name" />,
+    header: ({ column }) => <Header column={column} title="Admin Name" />,
     cell: ({ row }) => {
       const product = row.original as Product;
 
