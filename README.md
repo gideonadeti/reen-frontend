@@ -2,6 +2,8 @@
 
 A modern, responsive web application for a scalable e-commerce platform. Built with Next.js and featuring a beautiful UI with dark mode support, real-time updates, and comprehensive e-commerce functionality. This frontend client communicates with the [REEN Backend API](https://github.com/gideonadeti/reen-backend) to provide a complete e-commerce experience with product management, shopping cart, checkout processing, and order management.
 
+> **Note:** This project is currently not deployed online as my AWS free tier has ended. However, everything works perfectly locally. You can follow the instructions in the [Running Locally](#running-locally) section to set up and run the project on your machine.
+
 ## Table of Contents
 
 - [REEN Frontend](#reen-frontend)
