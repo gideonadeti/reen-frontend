@@ -17,6 +17,10 @@ A modern, responsive web application for a scalable e-commerce platform. Built w
     - [User Management](#user-management)
     - [User Experience](#user-experience)
   - [Screenshots](#screenshots)
+    - [Profile page on REEN](#profile-page-on-reen)
+    - [Users and Products pages](#users-and-products-pages)
+    - [My Cart sheet and Update Product dialog](#my-cart-sheet-and-update-product-dialog)
+    - [Stripe Checkout and Payment Successful pages](#stripe-checkout-and-payment-successful-pages)
   - [Technologies Used](#technologies-used)
     - [Core Framework](#core-framework)
     - [State Management \& Data Fetching](#state-management--data-fetching)
@@ -107,7 +111,21 @@ A modern, responsive web application for a scalable e-commerce platform. Built w
 
 ## Screenshots
 
-For screenshots, please visit the [REEN Frontend repository](https://github.com/gideonadeti/reen-frontend#screenshots).
+### Profile page on REEN
+
+![Profile page on REEN](./public/images/screenshots/profile-page.png)
+
+### Users and Products pages
+
+![Users and Products pages](./public/images/screenshots/users-and-products-pages.png)
+
+### My Cart sheet and Update Product dialog
+
+![My Cart sheet and Update Product dialog](./public/images/screenshots/my-cart-sheet-and-update-product-dialog.png)
+
+### Stripe Checkout and Payment Successful pages
+
+![Stripe Checkout and Payment Successful pages](./public/images/screenshots/stripe-checkout-and-payment-successful.png)
 
 ## Technologies Used
 
